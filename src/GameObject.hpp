@@ -2,7 +2,7 @@
 #include <string>
 
 #include "../lib/json.hpp"
-#include "Box.hpp"
+#include "Scene.hpp"
 
 namespace Game {
 
@@ -10,16 +10,16 @@ using json = nlohmann::json;
 
 class GameObject {
 public:
-  GameObject(std::string configFile);
+  GameObject(Scene& scene, std::string configFile);
   ~GameObject();
 
 private:
+  Scene& _scene;
   std::string _configFile;
   json _data;
-  std::vector<Shape::Box> _boxes;
 
 private:
-  void loadShape();
+  void loadObject();
 };
 
 } // namespace Game
