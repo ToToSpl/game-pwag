@@ -12,14 +12,15 @@ using json = nlohmann::json;
 
 struct BasicEntity {
   std::string name;
-  float* vertexes;
-  u_int32_t* indecies;
+  float* vertecies;
+  u_int8_t* indecies;
 }; // this element holds vertex and index data about some shape.
    // It can be rerender many times.
 
 class Scene {
 private:
   std::map<std::string, u_int32_t> _basic_entity_dict;
+  u_int32_t _basic_entity_index = 0;
   std::vector<BasicEntity> _basic_entities;
 
 public:
