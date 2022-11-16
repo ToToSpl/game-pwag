@@ -4,11 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../lib/json.hpp"
-
 namespace Game {
-
-using json = nlohmann::json;
 
 struct BasicEntity {
   std::string name;
@@ -27,6 +23,5 @@ public:
   ~Scene();
 
 public:
-  void addBoxEntity(json data);
 };
 } // namespace Game

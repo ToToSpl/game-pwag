@@ -11,6 +11,6 @@ else()
   add_definitions("-WX -W2")
 endif()
 
-add_executable(game src/main.cpp src/GameObject.cpp src/Scene.cpp)
+add_executable(game src/main.cpp src/Scene.cpp)
 
 target_link_libraries(game "-framework OpenGL" "-framework GLUT")
