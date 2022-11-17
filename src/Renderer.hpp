@@ -1,8 +1,24 @@
 #pragma once
 #include <GLFW/glfw3.h>
+#include <OpenGL/OpenGL.h>
 #include <string>
+#include <vector>
 
 namespace Game {
+
+struct Shader {
+  enum { VERTEX, FRAGMENT } type;
+  GLuint shaderId;
+};
+
+Shader* compileShader(std::string filepath);
+
+struct ShaderProgram {
+  Shader *vertex, *fragment;
+  GLuint programId;
+};
+
+ShaderProgram* compileProgram(Shader* vertex, Shader* fragment);
 
 class Renderer {
 private:

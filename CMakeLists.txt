@@ -15,7 +15,7 @@ else()
 endif()
 
 add_executable(game src/main.cpp src/GameObject.cpp src/Scene.cpp
-                    src/Renderer.cpp)
+                    src/Renderer.cpp src/Shader.cpp)
 
 target_link_libraries(game -lglfw "-framework Cocoa" "-framework OpenGL"
                       "-framework IOKit")

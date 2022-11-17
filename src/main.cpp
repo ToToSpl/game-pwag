@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <ostream>
-#define FPS_AVERAGE 10
+#define FPS_AVERAGE 10 // running average for fps calculation
 
 inline void fps_logger(float dur);
 
@@ -16,6 +16,9 @@ int main(int argc, char** argv) {
   renderer.init("Zombie Duck Hunt");
   Scene scene = Scene();
   GameObject duck(scene, BUILD_TO_ROOT + DUCK_PATH);
+  Shader* frag = compileShader(BUILD_TO_ROOT + "shaders/basic.frag");
+  Shader* vert = compileShader(BUILD_TO_ROOT + "shaders/basic.vert");
+  auto prog = compileProgram(vert, frag);
 
   while (renderer.shouldRun()) {
     fps_logger(renderer.renderFrame());
