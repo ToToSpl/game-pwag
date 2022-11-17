@@ -14,7 +14,7 @@ To install GLFW (MacOS):
 ```
 
 Also on M1 you need to export path to homebrew installation directory.
-See [https://stackoverflow.com/questions/67373307/macos-m1-fatal-error-glfw-glfw3-h-file-not-found](here).
+See [here](https://stackoverflow.com/questions/67373307/macos-m1-fatal-error-glfw-glfw3-h-file-not-found).
 
 ## TODO
 
