@@ -58,10 +58,15 @@ bool Renderer::init(std::string window_name) {
     return false;
   }
 
-  glGenVertexArrays(1, &_VertexArrayID);
-  glBindVertexArray(_VertexArrayID);
-
   glfwMakeContextCurrent(_window);
+
+  if (glewInit() != GLEW_OK) {
+    std::cout << "Failed to init glew!" << std::endl;
+    return false;
+  }
+
+  GLCall(glGenVertexArrays(1, &_VertexArrayID));
+  GLCall(glBindVertexArray(_VertexArrayID));
 
   _stdShaderFrag = compileShader(STD_SHADER_FRAG);
   _stdShaderVert = compileShader(STD_SHADER_VERT);

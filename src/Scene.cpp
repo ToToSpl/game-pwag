@@ -53,8 +53,16 @@ u_int32_t Scene::addBoxEntity(json data) {
   ent.indecies = indecies;
 
   glGenBuffers(1, &ent.vertArr);
+  glBindBuffer(GL_ARRAY_BUFFER, ent.vertArr);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8 * 3, vertecies,
+               GL_STATIC_DRAW);
 
-  _basic_entities.push_back({name, vertecies, indecies});
+  glGenBuffers(1, &ent.indArr);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ent.indArr);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u_int8_t) * 3 * 2 * 6, indecies,
+               GL_STATIC_DRAW);
+
+  _basic_entities.push_back(ent);
   _basic_entity_dict[name] = _basic_entity_index;
   return _basic_entity_index++;
 }
