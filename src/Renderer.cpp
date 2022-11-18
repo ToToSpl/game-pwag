@@ -1,4 +1,5 @@
 #include "Renderer.hpp"
+#include "constants.h"
 #define GLFW_INCLUDE_GLCOREARB
 #include <OpenGL/OpenGL.h>
 #include <cassert>
@@ -9,6 +10,9 @@
   GLClearError();                                                              \
   x;                                                                           \
   assert(GLLogCall());
+
+#define STD_SHADER_FRAG BUILD_TO_ROOT + "shaders/basic.frag"
+#define STD_SHADER_VERT BUILD_TO_ROOT + "shaders/basic.vert"
 
 // oh boy, I do love putting everything in one file
 
@@ -57,6 +61,10 @@ bool Renderer::init(std::string window_name) {
   }
 
   glfwMakeContextCurrent(_window);
+
+  _stdShaderFrag = compileShader(STD_SHADER_FRAG);
+  _stdShaderVert = compileShader(STD_SHADER_VERT);
+  _stdShaderProg = compileProgram(_stdShaderVert, _stdShaderFrag);
 
   return true;
 }

@@ -16,9 +16,7 @@ int main(int argc, char** argv) {
   renderer.init("Zombie Duck Hunt");
   Scene scene = Scene();
   GameObject duck(scene, BUILD_TO_ROOT + DUCK_PATH);
-  Shader* frag = compileShader(BUILD_TO_ROOT + "shaders/basic.frag");
-  Shader* vert = compileShader(BUILD_TO_ROOT + "shaders/basic.vert");
-  auto prog = compileProgram(vert, frag);
+  duck.spawn({0, 0, 0}, {0, 0, 0, 1});
 
   while (renderer.shouldRun()) {
     fps_logger(renderer.renderFrame());

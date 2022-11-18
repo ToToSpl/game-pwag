@@ -24,6 +24,8 @@ class Renderer {
 private:
   GLFWwindow* _window;
   bool _running = false;
+  Shader *_stdShaderFrag, *_stdShaderVert;
+  ShaderProgram* _stdShaderProg;
 
 public:
   Renderer();

@@ -30,8 +30,6 @@ Shader* compileShader(std::string filepath) {
     abort();
   }
 
-  std::cout << ShaderCode << std::endl;
-
   GLint Result = GL_FALSE;
   int InfoLogLength;
 

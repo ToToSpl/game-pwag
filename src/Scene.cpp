@@ -4,7 +4,7 @@ namespace Game {
 Scene::Scene() {}
 Scene::~Scene() {} // if only one scene is used, we don't need to clear memory
 
-void Scene::addBoxEntity(json data) {
+u_int32_t Scene::addBoxEntity(json data) {
   std::string name = data["name"];
   float position[3], dimension[3];
 
@@ -49,7 +49,7 @@ void Scene::addBoxEntity(json data) {
 
   _basic_entities.push_back({name, vertecies, indecies});
   _basic_entity_dict[name] = _basic_entity_index;
-  _basic_entity_index++;
+  return _basic_entity_index++;
 }
 
 } // namespace Game

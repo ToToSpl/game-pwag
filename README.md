@@ -6,11 +6,12 @@ Celem projektu jest stworzenie gry o nazwie “Duck Ninja”, w której użytkow
 
 ## System setup
 
-To run example OpenGL 4.2 is needed (build in on MacOS) and GLFW.
-To install GLFW (MacOS):
+To run example OpenGL 4.2 is needed (build in on MacOS), GLFW and GLM.
+To install libraries (MacOS):
 
 ```bash
   brew install glfw
+  brew install glm
 ```
 
 Also on M1 you need to export path to homebrew installation directory.

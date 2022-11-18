@@ -15,7 +15,9 @@ struct BasicEntity {
   float* vertecies;
   u_int8_t* indecies;
 }; // this element holds vertex and index data about some shape.
-   // It can be rerender many times.
+   // It can be rerendered many times.
+
+struct SceneObject {};
 
 class Scene {
 private:
@@ -28,6 +30,6 @@ public:
   ~Scene();
 
 public:
-  void addBoxEntity(json data);
+  u_int32_t addBoxEntity(json data);
 };
 } // namespace Game

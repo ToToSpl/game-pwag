@@ -18,10 +18,13 @@ void GameObject::loadObject() {
     std::string type = model["type"];
 
     if (type == "box") {
-      _scene.addBoxEntity(model);
+      u_int32_t id = _scene.addBoxEntity(model);
+      _entitiesIDs.push_back(id);
     } else {
     }
   }
 }
+
+void GameObject::spawn(glm::vec3 pos, glm::quat rot) {}
 
 } // namespace Game
