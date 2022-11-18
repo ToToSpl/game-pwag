@@ -1,6 +1,7 @@
 #pragma once
+#include <GL/glew.h>
+#define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
-#include <OpenGL/OpenGL.h>
 #include <string>
 #include <vector>
 
@@ -23,6 +24,7 @@ ShaderProgram* compileProgram(Shader* vertex, Shader* fragment);
 class Renderer {
 private:
   GLFWwindow* _window;
+  GLuint _VertexArrayID;
   bool _running = false;
   Shader *_stdShaderFrag, *_stdShaderVert;
   ShaderProgram* _stdShaderProg;

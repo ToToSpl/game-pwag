@@ -1,5 +1,6 @@
 #pragma once
 
+#include <GL/glew.h>
 #include <map>
 #include <string>
 #include <vector>
@@ -14,6 +15,7 @@ struct BasicEntity {
   std::string name;
   float* vertecies;
   u_int8_t* indecies;
+  GLuint vertArr, indArr;
 }; // this element holds vertex and index data about some shape.
    // It can be rerendered many times.
 

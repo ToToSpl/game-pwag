@@ -47,6 +47,13 @@ u_int32_t Scene::addBoxEntity(json data) {
   };
   // clang-format on
 
+  BasicEntity ent;
+  ent.name = name;
+  ent.vertecies = vertecies;
+  ent.indecies = indecies;
+
+  glGenBuffers(1, &ent.vertArr);
+
   _basic_entities.push_back({name, vertecies, indecies});
   _basic_entity_dict[name] = _basic_entity_index;
   return _basic_entity_index++;

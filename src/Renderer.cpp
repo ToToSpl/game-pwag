@@ -1,7 +1,5 @@
 #include "Renderer.hpp"
 #include "constants.h"
-#define GLFW_INCLUDE_GLCOREARB
-#include <OpenGL/OpenGL.h>
 #include <cassert>
 #include <chrono>
 #include <iostream>
@@ -59,6 +57,9 @@ bool Renderer::init(std::string window_name) {
     std::cout << "Failed to create window!" << std::endl;
     return false;
   }
+
+  glGenVertexArrays(1, &_VertexArrayID);
+  glBindVertexArray(_VertexArrayID);
 
   glfwMakeContextCurrent(_window);
 
