@@ -12,9 +12,9 @@ inline void fps_logger(float dur);
 using namespace Game;
 
 int main(int argc, char** argv) {
-  Renderer renderer = Renderer();
-  renderer.init("Zombie Duck Hunt");
   Scene scene = Scene();
+  Renderer renderer = Renderer(scene);
+  renderer.init("Zombie Duck Hunt");
   GameObject duck(scene, BUILD_TO_ROOT + DUCK_PATH);
   duck.spawn({0, 0, 0}, {0, 0, 0, 1});
 

@@ -2,6 +2,9 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -20,7 +23,7 @@ struct SceneObject {
 struct BasicEntity {
   std::string name;
   float* vertecies;
-  u_int8_t* indecies;
+  u_int16_t* indecies;
   GLuint vertArr, indArr;
   std::vector<SceneObject*> objects;
 }; // this element holds vertex and index data about some shape.
@@ -38,5 +41,8 @@ public:
 
 public:
   u_int32_t addBoxEntity(json data);
+  SceneObject* spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot);
+  void renderEntityObjects(BasicEntity& ent, GLuint matID, glm::mat4& mat);
+  inline std::vector<BasicEntity>* getEntities() { return &_basic_entities; };
 };
 } // namespace Game

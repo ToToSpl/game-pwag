@@ -25,6 +25,10 @@ void GameObject::loadObject() {
   }
 }
 
-void GameObject::spawn(glm::vec3 pos, glm::quat rot) {}
+void GameObject::spawn(glm::vec3 pos, glm::quat rot) {
+  for (auto ent : _entitiesIDs) {
+    _scene.spawnEntity(ent, pos, rot);
+  }
+}
 
 } // namespace Game
