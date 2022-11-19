@@ -17,6 +17,7 @@ int main(int argc, char** argv) {
   renderer.init("Zombie Duck Hunt");
   GameObject duck(scene, BUILD_TO_ROOT + DUCK_PATH);
   duck.spawn({0, 0, 0}, {0, 0, 0, 1});
+  duck.spawn({0, 1, 0}, {1, 0, 0, 0});
 
   while (renderer.shouldRun()) {
     fps_logger(renderer.renderFrame());

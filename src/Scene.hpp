@@ -24,6 +24,7 @@ struct BasicEntity {
   std::string name;
   float* vertecies;
   u_int16_t* indecies;
+  u_int16_t indeciesSize;
   GLuint vertArr, indArr;
   std::vector<SceneObject*> objects;
 }; // this element holds vertex and index data about some shape.

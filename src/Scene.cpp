@@ -55,25 +55,13 @@ u_int32_t Scene::addBoxEntity(json data) {
 		3, 2, 6,
 		6, 7, 3
   };
-
-  // vertecies = (float[CUBE_VERT]) {
-  //  -1.0f, -1.0f, 0.0f,
-  //   1.0f, -1.0f, 0.0f,
-  //  -1.0f,  1.0f, 0.0f,
-  //   1.0f,  1.0f, 0.0f,
-  // };
-  //
-  // indecies = (u_int16_t[CUBE_IND]) {
-  //   0, 1, 3,
-  //   0, 3, 2
-  // };
-
   // clang-format on
 
   BasicEntity ent;
   ent.name = name;
   ent.vertecies = vertecies;
   ent.indecies = indecies;
+  ent.indeciesSize = CUBE_IND;
 
   glGenBuffers(1, &ent.vertArr);
   glBindBuffer(GL_ARRAY_BUFFER, ent.vertArr);
@@ -123,10 +111,10 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint matID,
     glm::mat4 mvp = mat * obj->transform;
     glUniformMatrix4fv(matID, 1, GL_FALSE, &mvp[0][0]);
     // draw
-    glDrawElements(GL_TRIANGLES,         // mode
-                   sizeof(ent.indecies), // count
-                   GL_UNSIGNED_SHORT,    // type
-                   (void*)0              // element array buffer offset
+    glDrawElements(GL_TRIANGLES,      // mode
+                   ent.indeciesSize,  // count
+                   GL_UNSIGNED_SHORT, // type
+                   (void*)0           // element array buffer offset
     );
     obj->transform = glm::rotate(obj->transform, 3.14f * (1.0f / 60.0f),
                                  glm::vec3(0.0, 1.0, 0.0));
