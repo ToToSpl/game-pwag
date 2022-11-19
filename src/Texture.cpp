@@ -1,4 +1,5 @@
 #include "Texture.hpp"
+#include "../lib/lodepng.h"
 #include <iostream>
 #include <string>
 
@@ -17,5 +18,15 @@ void textureCreateBox(Texture* tex, json& data, std::string& configPath) {
       nameBegin++;
     texFileName = configPath.substr(0, nameBegin) + (std::string)data["source"];
   }
+  std::vector<unsigned char> image;
+  unsigned width, height;
+
+  if (unsigned error = lodepng::decode(image, width, height, texFileName)) {
+    std::cout << "PNG decoder error " << error << ": "
+              << lodepng_error_text(error) << std::endl;
+    abort();
+  }
+
+  std::cout << width << " " << height << std::endl;
 }
 } // namespace Game
