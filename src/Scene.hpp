@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "../lib/json.hpp"
+#include "Texture.hpp"
 
 namespace Game {
 
@@ -27,6 +28,7 @@ struct BasicEntity {
   u_int16_t indeciesSize;
   GLuint vertArr, indArr;
   std::vector<SceneObject*> objects;
+  Texture texture;
 }; // this element holds vertex and index data about some shape.
    // It can be rerendered many times.
 
@@ -41,7 +43,7 @@ public:
   ~Scene();
 
 public:
-  u_int32_t addBoxEntity(json data);
+  u_int32_t addBoxEntity(json& data, std::string configPath);
   SceneObject* spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot);
   void renderEntityObjects(BasicEntity& ent, GLuint matID, glm::mat4& mat);
   inline std::vector<BasicEntity>* getEntities() { return &_basic_entities; };

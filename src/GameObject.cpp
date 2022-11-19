@@ -18,7 +18,7 @@ void GameObject::loadObject() {
     std::string type = model["type"];
 
     if (type == "box") {
-      u_int32_t id = _scene.addBoxEntity(model);
+      u_int32_t id = _scene.addBoxEntity(model, _configFile);
       _entitiesIDs.push_back(id);
     } else {
     }

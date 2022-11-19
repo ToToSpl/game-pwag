@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(game)
 
-# find_package(glm REQUIRED)
+find_package(glm REQUIRED)
 find_package(glfw3 REQUIRED)
 
 if(NOT MSVC)
@@ -15,7 +15,7 @@ else()
 endif()
 
 add_executable(game src/main.cpp src/GameObject.cpp src/Scene.cpp
-                    src/Renderer.cpp src/Shader.cpp)
+                    src/Renderer.cpp src/Shader.cpp src/Texture.cpp)
 
 target_link_libraries(game -lglfw -lglew "-framework Cocoa" "-framework OpenGL"
                       "-framework IOKit")

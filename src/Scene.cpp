@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+#include "Texture.hpp"
 #include "glm/gtx/transform.hpp"
 
 #define CUBE_VERT 8 * 3
@@ -8,7 +9,7 @@ namespace Game {
 Scene::Scene() {}
 Scene::~Scene() {} // if only one scene is used, we don't need to clear memory
 
-u_int32_t Scene::addBoxEntity(json data) {
+u_int32_t Scene::addBoxEntity(json& data, std::string configPath) {
   std::string name = data["name"];
   float position[3], dimension[3];
 
@@ -72,6 +73,9 @@ u_int32_t Scene::addBoxEntity(json data) {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ent.indArr);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u_int16_t) * CUBE_IND, indecies,
                GL_STATIC_DRAW);
+
+  // texture
+  textureCreateBox(&ent.texture, data["texture"], configPath);
 
   _basic_entities.push_back(ent);
   _basic_entity_dict[name] = _basic_entity_index;
