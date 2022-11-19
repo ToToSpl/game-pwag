@@ -1,9 +1,7 @@
 #include "Scene.hpp"
 #include "Texture.hpp"
+#include "constants.h"
 #include "glm/gtx/transform.hpp"
-
-#define CUBE_VERT 8 * 3
-#define CUBE_IND 3 * 2 * 6
 
 namespace Game {
 Scene::Scene() {}
@@ -96,8 +94,8 @@ SceneObject* Scene::spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot) {
 void Scene::renderEntityObjects(BasicEntity& ent, GLuint matID,
                                 glm::mat4& mat) {
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, ent.vertArr);
@@ -108,6 +106,9 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint matID,
                         0,        // stride
                         (void*)0  // array buffer offset
   );
+
+  textureBindAttrib(&ent.texture, 1);
+
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ent.indArr);
 
   for (auto obj : ent.objects) {
@@ -125,6 +126,7 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint matID,
   }
 
   glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
 }
 
 } // namespace Game
