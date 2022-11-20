@@ -24,6 +24,38 @@ u_int32_t Scene::addBoxEntity(json& data, std::string configPath) {
   // clang-format off
   vertecies = (float[CUBE_VERT]){
     // x y z
+    // TODO: propably not the most efficient placement
+    // figure how to decrease vertex nomber, and texture works
+    position[0] - dimension[0], position[1] + dimension[1], position[2] + dimension[2], // front LU
+    position[0] + dimension[0], position[1] + dimension[1], position[2] + dimension[2], // front RU
+    position[0] - dimension[0], position[1] - dimension[1], position[2] + dimension[2], // front LD
+    position[0] + dimension[0], position[1] - dimension[1], position[2] + dimension[2], // front RD
+
+    position[0] - dimension[0], position[1] + dimension[1], position[2] - dimension[2], // back LU
+    position[0] + dimension[0], position[1] + dimension[1], position[2] - dimension[2], // back RU
+    position[0] - dimension[0], position[1] - dimension[1], position[2] - dimension[2], // back LD
+    position[0] + dimension[0], position[1] - dimension[1], position[2] - dimension[2], // back RD   
+
+    position[0] - dimension[0], position[1] + dimension[1], position[2] - dimension[2], // left LU
+    position[0] - dimension[0], position[1] + dimension[1], position[2] + dimension[2], // left RU
+    position[0] - dimension[0], position[1] - dimension[1], position[2] - dimension[2], // left LD
+    position[0] - dimension[0], position[1] - dimension[1], position[2] + dimension[2], // left RD
+
+    position[0] + dimension[0], position[1] + dimension[1], position[2] - dimension[2], // right LU
+    position[0] + dimension[0], position[1] + dimension[1], position[2] + dimension[2], // right RU
+    position[0] + dimension[0], position[1] - dimension[1], position[2] - dimension[2], // right LD
+    position[0] + dimension[0], position[1] - dimension[1], position[2] + dimension[2], // right RD
+
+    position[0] - dimension[0], position[1] - dimension[1], position[2] + dimension[2], // bottom LU
+    position[0] + dimension[0], position[1] - dimension[1], position[2] + dimension[2], // bottom RU
+    position[0] - dimension[0], position[1] - dimension[1], position[2] - dimension[2], // bottom LD
+    position[0] + dimension[0], position[1] - dimension[1], position[2] - dimension[2], // bottom RD
+
+    position[0] - dimension[0], position[1] + dimension[1], position[2] + dimension[2], // top LU
+    position[0] + dimension[0], position[1] + dimension[1], position[2] + dimension[2], // top RU
+    position[0] - dimension[0], position[1] + dimension[1], position[2] - dimension[2], // top LD
+    position[0] + dimension[0], position[1] + dimension[1], position[2] - dimension[2], // top RD
+    /*
     position[0] - dimension[0], position[1] - dimension[1], position[2] + dimension[2], // left bottom front
     position[0] + dimension[0], position[1] - dimension[1], position[2] + dimension[2], // right bottom front
     position[0] + dimension[0], position[1] + dimension[1], position[2] + dimension[2], // right top front
@@ -32,9 +64,29 @@ u_int32_t Scene::addBoxEntity(json& data, std::string configPath) {
     position[0] + dimension[0], position[1] - dimension[1], position[2] - dimension[2], // right bottom back
     position[0] + dimension[0], position[1] + dimension[1], position[2] - dimension[2], // right top back
     position[0] - dimension[0], position[1] + dimension[1], position[2] - dimension[2], // left top back
+    */
   };
 
   indecies = (u_int16_t[CUBE_IND]){
+    // front
+    2, 1, 0,
+    2, 3, 1,
+    // back
+    4, 5, 6,
+    5, 7, 6,
+    // left
+    10, 9, 8,
+    10, 11, 9,
+    // right
+    12, 13, 14,
+    13, 15, 14,
+    // bottom
+    18, 17, 16,
+    18, 19, 17,
+    // top
+    20, 21, 22,
+    21, 23, 22,
+    /*
 		// front
 		0, 1, 2,
 		2, 3, 0,
@@ -53,6 +105,7 @@ u_int32_t Scene::addBoxEntity(json& data, std::string configPath) {
 		// top
 		3, 2, 6,
 		6, 7, 3
+		*/
   };
   // clang-format on
 
@@ -85,7 +138,7 @@ SceneObject* Scene::spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot) {
 
   glm::mat4 rotM = glm::toMat4(rot);
   glm::mat4 trans = glm::translate(glm::mat4(1.0f), pos);
-  obj->transform = rotM * trans;
+  obj->transform = trans * rotM;
   _basic_entities[entId].objects.push_back(obj);
 
   return obj;
