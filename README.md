@@ -19,7 +19,7 @@ See [here](https://stackoverflow.com/questions/67373307/macos-m1-fatal-error-glf
 
 ## TODO
 
-- [ ] Ładowanie obiektów z pliku
+- [x] Ładowanie obiektów z pliku (z pliku JSON)
 - [ ] Generowanie terenu, stworzenie podstawowej sceny
 - [ ] Nawigacja po scenie za pomocą myszki i klawiatury
 - [ ] Umożliwienie podglądu sceny w trybie wireframe
