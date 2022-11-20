@@ -2,7 +2,7 @@
   "shape": [
     {
       "type": "box",
-      "name": "body",
+      "name": "floor",
       "position": [
         0,
         0,
