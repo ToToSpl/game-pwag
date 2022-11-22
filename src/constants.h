@@ -8,3 +8,5 @@
 #define CUBE_VERT 6 * 4 * 3
 #define CUBE_IND 6 * 4 * 3
 #define CUBE_UV 6 * 4 * 2
+
+#define FOV 45.0f

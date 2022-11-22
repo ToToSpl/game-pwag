@@ -56,9 +56,6 @@ void textureCreateBox(Texture* tex, json& data, std::string& configPath) {
     }
   }
 
-  for (int i = 0; i < 4; i++)
-    std::cout << top[i] << std::endl;
-
   // setup UVs
   tex->UVs = (float*)malloc(sizeof(float) * CUBE_UV);
   // clang-format off

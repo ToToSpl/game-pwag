@@ -13,8 +13,6 @@
 #define STD_SHADER_FRAG BUILD_TO_ROOT + "shaders/basic.frag"
 #define STD_SHADER_VERT BUILD_TO_ROOT + "shaders/basic.vert"
 
-// oh boy, I do love putting everything in one file
-
 static void GLClearError() {
   while (glGetError() != GL_NO_ERROR)
     ;
