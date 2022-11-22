@@ -1,34 +1,62 @@
 #include "Player.hpp"
 #include "constants.h"
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 namespace Game {
-// ------ Camera --------
-Camera::Camera(GLFWwindow* window, int width, int height, bool resize)
-    : _window(window), _width(width), _height(height), _resize(resize) {
-  _fov = FOV;
-  _projection = glm::perspective(glm::radians(_fov),
-                                 (float)_width / (float)_height, 0.1f, 300.0f);
-}
-Camera::~Camera(){};
 
-glm::mat4 Camera::getProjection(glm::vec3 position, glm::vec3 direction) {
-  if (_resize) {
-    int nW, nH;
-    glfwGetWindowSize(_window, &nW, &nH);
-    if (nW != _width || nH != _height) {
-      _width = nW;
-      _height = nH;
-      _projection = glm::perspective(
-          glm::radians(_fov), (float)_width / (float)_height, 0.1f, 300.0f);
-    }
+Player::Player(glm::vec3 startPos, double horAngle, double vertAngle,
+               GLFWwindow* window)
+    : _position(startPos), _horAng(horAngle), _vertAng(vertAngle),
+      _window(window) {
+  int w, h;
+  glfwGetWindowSize(_window, &w, &h);
+  _camera = new Camera(_window, w, h, true);
+}
+
+Player::~Player() { delete _camera; }
+
+void Player::update(float ts) {
+  double xpos, ypos;
+  glfwGetCursorPos(_window, &xpos, &ypos);
+
+  auto scrnSize = _camera->getWindowSize();
+  double centerX = scrnSize.first / 2.0f;
+  double centerY = scrnSize.second / 2.0f;
+
+  glfwSetCursorPos(_window, centerX, centerY);
+
+  _horAng += MOUSE_SPEED * ts * (centerX - xpos);
+  _vertAng += MOUSE_SPEED * ts * (centerY - ypos);
+
+  _direction = {cos(_vertAng) * sin(_horAng), sin(_vertAng),
+                cos(_vertAng) * cos(_horAng)};
+
+  glm::vec3 right =
+      glm::vec3(sin(_horAng - 3.14f / 2.0f), 0, cos(_horAng - 3.14f / 2.0f));
+
+  _up = glm::cross(right, _direction);
+
+  if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS) {
+    _position += _direction * ts * PLAYER_SPEED;
+  }
+  // Move backward
+  if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS) {
+    _position -= _direction * ts * PLAYER_SPEED;
+  }
+  // Strafe right
+  if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS) {
+    _position += right * ts * PLAYER_SPEED;
+  }
+  // Strafe left
+  if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS) {
+    _position -= right * ts * PLAYER_SPEED;
   }
 
-  glm::mat4 view =
-      glm::lookAt(position, position + direction, glm::vec3(0, 1, 0));
+  // clip player to gound
+  _position.y = 0.0;
+}
 
-  return _projection * view;
+glm::mat4 Player::getPlayerProjection() {
+  return _camera->getProjection(_position, _direction, _up);
 }
 
 } // namespace Game

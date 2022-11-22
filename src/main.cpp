@@ -1,4 +1,5 @@
 #include "GameObject.hpp"
+#include "Player.hpp"
 #include "Renderer.hpp"
 #include "Scene.hpp"
 #include "constants.h"
@@ -15,6 +16,10 @@ int main(int argc, char** argv) {
   Scene scene = Scene();
   Renderer renderer = Renderer(scene);
   renderer.init("Zombie Duck Hunt");
+
+  Player player = Player({-1, 0, 0}, 0.0, 0.0, renderer.getWindow());
+  renderer.bindPlayer(&player);
+
   GameObject duck(scene, BUILD_TO_ROOT + DUCK_PATH);
   duck.spawn({0, 0, 0}, {1, 0, 0, 0});
   duck.spawn({0, 1.5, 0}, {0, 0, 0, 1});

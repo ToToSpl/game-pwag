@@ -10,3 +10,6 @@
 #define CUBE_UV 6 * 4 * 2
 
 #define FOV 45.0f
+
+#define PLAYER_SPEED 0.05f
+#define MOUSE_SPEED 0.001f

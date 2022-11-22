@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "Player.hpp"
 #include "Scene.hpp"
 
 namespace Game {
@@ -33,17 +34,21 @@ private:
   GLuint _matrixID;
 
   Scene& _scene;
-  glm::mat4 _camera;
+  Player* _player;
+  double _lastFrame;
 
 public:
   Renderer(Scene& scene);
   ~Renderer();
 
 public:
+  inline GLFWwindow* getWindow() { return _window; };
+  inline void bindPlayer(Player* player) { _player = player; };
+
+public:
   bool init(std::string window_name);
   inline void bindScene(Scene& scene) { _scene = scene; };
   inline bool shouldRun() { return !glfwWindowShouldClose(_window); };
   float renderFrame();
-  glm::mat4 getCamera();
 };
 } // namespace Game

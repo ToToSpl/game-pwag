@@ -174,8 +174,8 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint matID,
                    GL_UNSIGNED_SHORT, // type
                    (void*)0           // element array buffer offset
     );
-    obj->transform = glm::rotate(obj->transform, 3.14f * (1.0f / 60.0f),
-                                 glm::vec3(0.0, 1.0, 0.0));
+    // obj->transform = glm::rotate(obj->transform, 3.14f * (1.0f / 60.0f),
+    //                              glm::vec3(0.0, 1.0, 0.0));
   }
 
   glDisableVertexAttribArray(0);
