@@ -1,15 +1,24 @@
 #pragma once
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 namespace Game {
 class Camera {
 private:
-  float _screenW, _screenH, _fov;
-  glm::mat4 _projectionMat;
+  int _width, _height;
+  float _fov;
+  bool _resize;
+  glm::mat4 _projection;
+  GLFWwindow* _window;
 
 public:
-  Camera();
+  Camera(GLFWwindow* window, int width, int height, bool resize);
   ~Camera();
+
+public:
+  glm::mat4 getProjection(glm::vec3 position, glm::vec3 direction);
+
+private:
 };
 
 class Player {
