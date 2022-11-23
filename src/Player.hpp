@@ -11,6 +11,10 @@ private:
   glm::vec3 _position, _up, _direction;
   GLFWwindow* _window;
   double _horAng, _vertAng;
+  bool _enabled = false;
+
+private:
+  void freezeLogic();
 
 public:
   Player(glm::vec3 startPos, double horAngle, double vertAngle,

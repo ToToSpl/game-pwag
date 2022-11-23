@@ -2,6 +2,7 @@
 #include "constants.h"
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
+
 namespace Game {
 
 Camera::Camera(GLFWwindow* window, int width, int height, bool resize)

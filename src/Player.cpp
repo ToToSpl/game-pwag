@@ -15,12 +15,16 @@ Player::Player(glm::vec3 startPos, double horAngle, double vertAngle,
 Player::~Player() { delete _camera; }
 
 void Player::update(float ts) {
+  freezeLogic();
+  if (!_enabled)
+    return;
+
   double xpos, ypos;
   glfwGetCursorPos(_window, &xpos, &ypos);
 
   auto scrnSize = _camera->getWindowSize();
-  double centerX = scrnSize.first / 2.0f;
-  double centerY = scrnSize.second / 2.0f;
+  double centerX = glm::ceil(scrnSize.first / 2.0f);
+  double centerY = glm::ceil(scrnSize.second / 2.0f);
 
   glfwSetCursorPos(_window, centerX, centerY);
 
@@ -58,6 +62,21 @@ void Player::update(float ts) {
 
   // clip player to gound
   _position.y = 0.0;
+}
+
+void Player::freezeLogic() {
+  if (_enabled) {
+    if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+      _enabled = false;
+      glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+  } else {
+    if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+      _enabled = true;
+      glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    }
+  }
 }
 
 glm::mat4 Player::getPlayerProjection() {

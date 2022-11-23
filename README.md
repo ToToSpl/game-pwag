@@ -4,6 +4,10 @@
 
 Celem projektu jest stworzenie gry o nazwie “Duck Ninja”, w której użytkownik będziezbierał punkty przez przecinanie przeciwników - kaczek-zombie mieczem.
 
+## Game info
+
+You can stop the game with ESC and resume by clicking the window.
+
 ## System setup
 
 To run example OpenGL 4.2 is needed (build in on MacOS), GLFW and GLM.
