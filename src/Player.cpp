@@ -1,12 +1,26 @@
 #include "Player.hpp"
 #include "constants.h"
+#include <algorithm>
 
 namespace Game {
+
+AcceleretionEngine::AcceleretionEngine(float drag, float max_spd)
+    : _drag(drag), _max_spd(max_spd){};
+float AcceleretionEngine::getSpeed(float acc, float ts) {
+  _spd += acc * ts - _drag * _spd * ts;
+  if (_spd < -_max_spd)
+    _spd = -_max_spd;
+  else if (_spd > _max_spd)
+    _spd = _max_spd;
+  return _spd;
+}
 
 Player::Player(glm::vec3 startPos, double horAngle, double vertAngle,
                GLFWwindow* window)
     : _position(startPos), _horAng(horAngle), _vertAng(vertAngle),
-      _window(window) {
+      _window(window), _accX(PLAYER_DRAG, PLAYER_SPEED),
+      _accY(PLAYER_DRAG, PLAYER_SPEED), _accZ(PLAYER_DRAG, PLAYER_SPEED),
+      _accHor(MOUSE_DRAG, MOUSE_SPEED), _accVert(MOUSE_DRAG, MOUSE_SPEED) {
   int w, h;
   glfwGetWindowSize(_window, &w, &h);
   _camera = new Camera(_window, w, h, true);
@@ -28,8 +42,10 @@ void Player::update(float ts) {
 
   glfwSetCursorPos(_window, centerX, centerY);
 
-  _horAng += MOUSE_SPEED * ts * (centerX - xpos);
-  _vertAng += MOUSE_SPEED * ts * (centerY - ypos);
+  _horAng += _accHor.getSpeed(centerX - xpos,
+                              ts); // MOUSE_SPEED * ts * (centerX - xpos);
+  _vertAng += _accVert.getSpeed(centerY - ypos,
+                                ts); // MOUSE_SPEED * ts * (centerY - ypos);
 
   if (_vertAng < -1.57f)
     _vertAng = -1.57f;

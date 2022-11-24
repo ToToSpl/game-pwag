@@ -12,4 +12,6 @@
 #define FOV 45.0f
 
 #define PLAYER_SPEED 0.05f
-#define MOUSE_SPEED 0.001f
+#define PLAYER_DRAG 0.01f
+#define MOUSE_SPEED 0.05f
+#define MOUSE_DRAG 0.005f
