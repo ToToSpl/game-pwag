@@ -21,10 +21,10 @@ int main(int argc, char** argv) {
   renderer.bindPlayer(&player);
 
   GameObject duck(scene, BUILD_TO_ROOT + DUCK_PATH);
-  duck.spawn({0, 0, 0}, {1, 0, 0, 0});
-  duck.spawn({0, 1.5, 0}, {0, 0, 0, 1});
+  duck.spawn({0, 1, 0}, {1, 0, 0, 0});
+  duck.spawn({0, 2.5, 0}, {0, 0, 0, 1});
   GameObject floor(scene, BUILD_TO_ROOT + FLOOR_PATH);
-  floor.spawn({0, -8, 0}, {1, 0, 0, 0});
+  floor.spawn({0, 0, 0}, {1, 0, 0, 0});
 
   while (renderer.shouldRun()) {
     fps_logger(renderer.renderFrame());
