@@ -1,6 +1,8 @@
 #include "Player.hpp"
 #include "constants.h"
 
+#include <iostream>
+
 namespace Game {
 
 Player::Player(glm::vec3 startPos, double horAngle, double vertAngle,
@@ -47,35 +49,38 @@ void Player::update(float ts) {
 
   glm::vec3 dir2d = {sin(_horAng), 0.f, cos(_horAng)};
   glm::vec3 acc = {0.0, 0.0, 0.0};
-  if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS) {
-    acc += dir2d * ts * PLAYER_SPEED;
-  }
+  if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
+    acc += dir2d;
   // Move backward
-  if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS) {
-    acc -= dir2d * ts * PLAYER_SPEED;
-  }
+  if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS)
+    acc -= dir2d;
   // Strafe right
-  if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS) {
-    acc += right * ts * PLAYER_SPEED;
-  }
+  if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
+    acc += right;
   // Strafe left
-  if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS) {
-    acc -= right * ts * PLAYER_SPEED;
-  }
-  // Jump
-  if (glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-    if (_position.y == 0.f) {
-      _position.y = 0.1f;
-      _speed.y += ts * PLAYER_JUMP;
-    }
-  }
-  acc.y -= GRAVITY;
+  if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
+    acc -= right;
 
-  _speed += acc * ts - _speed * PLAYER_DRAG;
+  // // Jump
+  // if (glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+  //   if (_position.y == 0.f) {
+  //     _position.y = 0.1f;
+  //     _speed.y += ts * PLAYER_JUMP;
+  //   }
+  // }
+
+  if (glm::length(acc) != 0.0f)
+    acc = PLAYER_ACC * ts * glm::normalize(acc);
+
+  _speed *= 0.85;
+  _speed += acc * ts;
+
+  if (glm::length(_speed) > PLAYER_SPEED)
+    _speed = glm::normalize(_speed) * PLAYER_SPEED;
   _position += _speed * ts;
 
   // clip player to ground
-  if (_position.y < 0.f)
+  if (_position.y != 0.f)
     _position.y = 0.f;
 }
 
