@@ -56,8 +56,9 @@ void textureCreateBox(Texture* tex, json& data, std::string& configPath) {
     }
   }
 
-  // setup UVs
   tex->UVs = (float*)malloc(sizeof(float) * CUBE_UV);
+  tex->normals = (float*)malloc(sizeof(float) * CUBE_NORMAL);
+
   // clang-format off
   tex->UVs = (float[CUBE_UV]) {
     front[0], front[1], 
@@ -90,12 +91,49 @@ void textureCreateBox(Texture* tex, json& data, std::string& configPath) {
     top[0], top[3], 
     top[2], top[3],
   };
+
+  tex->normals = (float[CUBE_NORMAL]) {
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+    
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0,
+
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+  };
   // clang-format on
 
-  // bind buffer
+  // bind buffers
   glGenBuffers(1, &tex->uvID);
   glBindBuffer(GL_ARRAY_BUFFER, tex->uvID);
   glBufferData(GL_ARRAY_BUFFER, sizeof(float) * CUBE_UV, tex->UVs,
+               GL_STATIC_DRAW);
+
+  glGenBuffers(1, &tex->normalID);
+  glBindBuffer(GL_ARRAY_BUFFER, tex->normalID);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * CUBE_NORMAL, tex->normals,
                GL_STATIC_DRAW);
 
   glGenTextures(1, &tex->textureID);
@@ -119,4 +157,17 @@ void textureBindAttrib(Texture* tex, u_int32_t attrib) {
                         (void*)0  // array buffer offset
   );
 }
+
+void textureBindNormals(Texture* tex, u_int32_t attrib) {
+  glEnableVertexAttribArray(attrib);
+  glBindBuffer(GL_ARRAY_BUFFER, tex->normalID);
+  glVertexAttribPointer(attrib,   // attribute.
+                        3,        // size
+                        GL_FLOAT, // type
+                        GL_FALSE, // normalized?
+                        0,        // stride
+                        (void*)0  // array buffer offset
+  );
+}
+
 } // namespace Game

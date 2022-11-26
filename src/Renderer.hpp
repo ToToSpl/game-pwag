@@ -31,7 +31,7 @@ private:
   bool _running = false;
   Shader *_stdShaderFrag, *_stdShaderVert;
   ShaderProgram* _stdShaderProg;
-  GLuint _matrixID;
+  GLuint _cameraID, _transformationID, _normalMatID, _cameraPosID;
 
   Scene& _scene;
   Player* _player;

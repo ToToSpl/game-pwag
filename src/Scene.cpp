@@ -2,6 +2,7 @@
 #include "Texture.hpp"
 #include "constants.h"
 #include "glm/gtx/transform.hpp"
+#include <OpenGL/OpenGL.h>
 
 namespace Game {
 Scene::Scene() {}
@@ -144,8 +145,10 @@ SceneObject* Scene::spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot) {
   return obj;
 }
 
-void Scene::renderEntityObjects(BasicEntity& ent, GLuint matID,
-                                glm::mat4& mat) {
+void Scene::renderEntityObjects(BasicEntity& ent, GLuint camMatID,
+                                glm::mat4& camMat, glm::vec3& camPos,
+                                GLuint transMatID, GLuint normalMatID,
+                                GLuint cameraPosID) {
 
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -161,13 +164,18 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint matID,
   );
 
   textureBindAttrib(&ent.texture, 1);
+  textureBindNormals(&ent.texture, 2);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ent.indArr);
 
   for (auto obj : ent.objects) {
     // set uniforms
-    glm::mat4 mvp = mat * obj->transform;
-    glUniformMatrix4fv(matID, 1, GL_FALSE, &mvp[0][0]);
+    glm::mat4 mvp = camMat * obj->transform;
+    glm::mat3 normalMat = glm::transpose(glm::inverse(obj->transform));
+    glUniformMatrix4fv(camMatID, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(transMatID, 1, GL_FALSE, &obj->transform[0][0]);
+    glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &normalMat[0][0]);
+    glUniform3fv(cameraPosID, 1, &camPos[0]);
     // draw
     glDrawElements(GL_TRIANGLES,      // mode
                    ent.indeciesSize,  // count
@@ -180,6 +188,7 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint matID,
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
 }
 
 } // namespace Game

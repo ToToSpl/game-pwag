@@ -71,7 +71,10 @@ bool Renderer::init(std::string window_name) {
   _stdShaderFrag = compileShader(STD_SHADER_FRAG);
   _stdShaderVert = compileShader(STD_SHADER_VERT);
   _stdShaderProg = compileProgram(_stdShaderVert, _stdShaderFrag);
-  _matrixID = glGetUniformLocation(_stdShaderProg->programId, "MVP");
+  _cameraID = glGetUniformLocation(_stdShaderProg->programId, "MVP");
+  _transformationID = glGetUniformLocation(_stdShaderProg->programId, "M");
+  _normalMatID = glGetUniformLocation(_stdShaderProg->programId, "NormalMat");
+  _cameraPosID = glGetUniformLocation(_stdShaderProg->programId, "V");
 
   glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
@@ -87,6 +90,7 @@ float Renderer::renderFrame() {
 
   _player->update(_lastFrame);
   glm::mat4 camera = _player->getPlayerProjection();
+  glm::vec3 cameraPos = _player->getPlayerCameraPosition();
 
   /* Render here */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the buffers
@@ -95,7 +99,8 @@ float Renderer::renderFrame() {
 
   std::vector<BasicEntity>* ents = _scene.getEntities();
   for (auto ent : *ents) {
-    _scene.renderEntityObjects(ent, _matrixID, camera);
+    _scene.renderEntityObjects(ent, _cameraID, camera, cameraPos,
+                               _transformationID, _normalMatID, _cameraPosID);
   }
 
   /* Swap front and back buffers */

@@ -25,5 +25,6 @@ public:
 public:
   void update(float ts);
   glm::mat4 getPlayerProjection();
+  glm::vec3 getPlayerCameraPosition();
 };
 } // namespace Game

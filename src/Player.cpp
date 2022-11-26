@@ -100,4 +100,10 @@ glm::mat4 Player::getPlayerProjection() {
   return _camera->getProjection(camera_pos, _direction, _up);
 }
 
+glm::vec3 Player::getPlayerCameraPosition() {
+  glm::vec3 pos = {0.f, 1.8f, 0.f};
+  pos += _position;
+  return pos;
+}
+
 } // namespace Game

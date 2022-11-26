@@ -45,7 +45,9 @@ public:
 public:
   u_int32_t addBoxEntity(json& data, std::string configPath);
   SceneObject* spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot);
-  void renderEntityObjects(BasicEntity& ent, GLuint matID, glm::mat4& mat);
+  void renderEntityObjects(BasicEntity& ent, GLuint caMatID, glm::mat4& camMat,
+                           glm::vec3& camPos, GLuint transMatID,
+                           GLuint normalMatID, GLuint cameraPosID);
   inline std::vector<BasicEntity>* getEntities() { return &_basic_entities; };
 };
 } // namespace Game
