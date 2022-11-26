@@ -49,6 +49,6 @@ public:
   bool init(std::string window_name);
   inline void bindScene(Scene& scene) { _scene = scene; };
   inline bool shouldRun() { return !glfwWindowShouldClose(_window); };
-  float renderFrame();
+  float renderFrame(float ts);
 };
 } // namespace Game

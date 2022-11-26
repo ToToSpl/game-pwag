@@ -85,10 +85,10 @@ bool Renderer::init(std::string window_name) {
   return true;
 }
 
-float Renderer::renderFrame() {
+float Renderer::renderFrame(float ts) {
   auto start = std::chrono::high_resolution_clock::now();
 
-  _player->update(_lastFrame);
+  _player->update(ts);
   glm::mat4 camera = _player->getPlayerProjection();
   glm::vec3 cameraPos = _player->getPlayerCameraPosition();
 

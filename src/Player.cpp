@@ -72,8 +72,9 @@ void Player::update(float ts) {
   if (glm::length(acc) != 0.0f)
     acc = PLAYER_ACC * ts * glm::normalize(acc);
 
-  _speed *= 0.85;
   _speed += acc * ts;
+  for (u_int32_t i = 0; i < ts; i++)
+    _speed *= PLAYER_DRAG;
 
   if (glm::length(_speed) > PLAYER_SPEED)
     _speed = glm::normalize(_speed) * PLAYER_SPEED;
