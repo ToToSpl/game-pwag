@@ -14,7 +14,7 @@ uniform mat3 NormalMat;
 
 void main(){
   gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
-  norm = NormalMat * vertexNorm;
+  norm = normalize(NormalMat * vertexNorm);
   FragPos = (M * vec4(vertexPosition_modelspace,1)).xyz;
   UV = vertexUV;
 }
