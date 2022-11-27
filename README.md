@@ -27,7 +27,7 @@ See [here](https://stackoverflow.com/questions/67373307/macos-m1-fatal-error-glf
 - [x] Generowanie terenu, stworzenie podstawowej sceny
 - [x] Nawigacja po scenie za pomocą myszki i klawiatury
 - [x] Umożliwienie podglądu sceny w trybie wireframe
-- [ ] Ładowanie zewnętrznych, teksturowanych obiektów
+- [x] Ładowanie zewnętrznych, teksturowanych obiektów
 - [ ] Stworzenie shaderów pokazujących obrażenia zadawane postaci przez wrogów
 - [x] Animacje ruchu przeciwników
 - [ ] Implementacja fizyki członków przeciwników
