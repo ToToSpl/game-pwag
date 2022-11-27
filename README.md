@@ -24,11 +24,11 @@ See [here](https://stackoverflow.com/questions/67373307/macos-m1-fatal-error-glf
 ## TODO
 
 - [x] Ładowanie obiektów z pliku (z pliku JSON)
-- [ ] Generowanie terenu, stworzenie podstawowej sceny
-- [ ] Nawigacja po scenie za pomocą myszki i klawiatury
+- [x] Generowanie terenu, stworzenie podstawowej sceny
+- [x] Nawigacja po scenie za pomocą myszki i klawiatury
 - [ ] Umożliwienie podglądu sceny w trybie wireframe
 - [ ] Ładowanie zewnętrznych, teksturowanych obiektów
 - [ ] Stworzenie shaderów pokazujących obrażenia zadawane postaci przez wrogów
-- [ ] Animacje ruchu przeciwników
+- [x] Animacje ruchu przeciwników
 - [ ] Implementacja fizyki członków przeciwników
 - [ ] Oświetlenie zgodne z modelem Phonga, punktowe źródła światła, zastosowanie dynamicznego oświetlania, bez uwzględnienia cieni
