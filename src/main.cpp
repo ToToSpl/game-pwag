@@ -25,16 +25,15 @@ int main(int argc, char** argv) {
   GameObject duck(scene, BUILD_TO_ROOT + DUCK_PATH);
   // duck.spawn({0, 1, 0}, {1, 0, 0, 0});
   // duck.spawn({0, 2.5, 0}, {0, 0, 0, 1});
-  // performance test
   u_int32_t box_side = 4;
   for (u_int32_t i = 0; i < box_side; i++) {
-
     for (u_int32_t j = 0; j < box_side; j++) {
       for (u_int32_t k = 0; k < box_side; k++) {
         duck.spawn({i, j + 1.f, k}, {1, 0, 0, 0});
       }
     }
   }
+
   GameObject floor(scene, BUILD_TO_ROOT + FLOOR_PATH);
   floor.spawn({0, 0, 0}, {1, 0, 0, 0});
 

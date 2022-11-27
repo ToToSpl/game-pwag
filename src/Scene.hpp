@@ -21,6 +21,8 @@ struct SceneObject {
   float scale = 1.0;
 };
 
+enum EntitySpecial { NONE, FLAP };
+
 struct BasicEntity {
   std::string name;
   float* vertecies;
@@ -29,6 +31,9 @@ struct BasicEntity {
   GLuint vertArr, indArr;
   std::vector<SceneObject*> objects;
   Texture texture;
+  EntitySpecial special;
+  float specialVar = 0.f;
+  float dimension[3], position[3];
 }; // this element holds vertex and index data about some shape.
    // It can be rerendered many times.
 

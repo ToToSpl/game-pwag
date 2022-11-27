@@ -3,6 +3,9 @@
 #include "constants.h"
 #include "glm/gtx/transform.hpp"
 #include <OpenGL/OpenGL.h>
+#include <cmath>
+
+#include <iostream>
 
 namespace Game {
 Scene::Scene() {}
@@ -10,8 +13,8 @@ Scene::~Scene() {} // if only one scene is used, we don't need to clear memory
 
 u_int32_t Scene::addBoxEntity(json& data, std::string configPath) {
   std::string name = data["name"];
-  float position[3], dimension[3];
 
+  float position[3], dimension[3];
   for (int i = 0; i < 3; i++) {
     position[i] = (float)data["position"][i];
     dimension[i] = 0.5f * (float)data["dimension"][i];
@@ -116,6 +119,16 @@ u_int32_t Scene::addBoxEntity(json& data, std::string configPath) {
   ent.indecies = indecies;
   ent.indeciesSize = CUBE_IND;
 
+  for (uint8_t i = 0; i < 3; i++) {
+    ent.dimension[i] = dimension[i];
+    ent.position[i] = position[i];
+  }
+
+  if (data["special"] == "none")
+    ent.special = EntitySpecial::NONE;
+  else if (data["special"] == "flap")
+    ent.special = EntitySpecial::FLAP;
+
   glGenBuffers(1, &ent.vertArr);
   glBindBuffer(GL_ARRAY_BUFFER, ent.vertArr);
   glBufferData(GL_ARRAY_BUFFER, sizeof(float) * CUBE_VERT, vertecies,
@@ -168,22 +181,55 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint camMatID,
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ent.indArr);
 
-  for (auto obj : ent.objects) {
-    // set uniforms
-    glm::mat4 mvp = camMat * obj->transform;
-    glm::mat3 normalMat = glm::transpose(glm::inverse(obj->transform));
-    glUniformMatrix4fv(camMatID, 1, GL_FALSE, &mvp[0][0]);
-    glUniformMatrix4fv(transMatID, 1, GL_FALSE, &obj->transform[0][0]);
-    glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &normalMat[0][0]);
-    glUniform3fv(cameraPosID, 1, &camPos[0]);
-    // draw
-    glDrawElements(GL_TRIANGLES,      // mode
-                   ent.indeciesSize,  // count
-                   GL_UNSIGNED_SHORT, // type
-                   (void*)0           // element array buffer offset
-    );
-    // obj->transform = glm::rotate(obj->transform, 3.14f * (1.0f / 60.0f),
-    //                              glm::vec3(0.0, 1.0, 0.0));
+  glUniform3fv(cameraPosID, 1, &camPos[0]);
+
+  if (ent.special == EntitySpecial::NONE) {
+    for (u_int32_t i = 0; i < ent.objects.size(); i++) {
+      // set uniforms
+      SceneObject* obj = ent.objects[i];
+      glm::mat4 mvp = camMat * obj->transform;
+      glm::mat3 normalMat = glm::transpose(glm::inverse(obj->transform));
+      glUniformMatrix4fv(camMatID, 1, GL_FALSE, &mvp[0][0]);
+      glUniformMatrix4fv(transMatID, 1, GL_FALSE, &obj->transform[0][0]);
+      glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &normalMat[0][0]);
+      // draw
+      glDrawElements(GL_TRIANGLES,      // mode
+                     ent.indeciesSize,  // count
+                     GL_UNSIGNED_SHORT, // type
+                     (void*)0           // element array buffer offset
+      );
+    }
+  } else if (ent.special == EntitySpecial::FLAP) {
+    ent.specialVar += 0.1;
+    if (ent.specialVar > 6.28)
+      ent.specialVar = 0.f;
+
+    for (u_int32_t i = 0; i < ent.objects.size(); i++) {
+      float rot = 0.785f * (1.f + sinf(ent.specialVar + (float)i));
+      SceneObject* obj = ent.objects[i];
+      glm::mat4 flappy = glm::translate(
+          obj->transform, {ent.position[0], ent.position[1] + ent.dimension[1],
+                           ent.position[2]});
+      if (ent.position[0] > 0)
+        flappy = glm::rotate(flappy, rot, {0.f, 0.f, 1.f});
+      else
+        flappy = glm::rotate(flappy, -rot, {0.f, 0.f, 1.f});
+      flappy = glm::translate(flappy, {-ent.position[0],
+                                       -ent.position[1] - ent.dimension[1],
+                                       -ent.position[2]});
+
+      glm::mat4 mvp = camMat * flappy;
+      glm::mat3 normalMat = glm::transpose(glm::inverse(flappy));
+      glUniformMatrix4fv(camMatID, 1, GL_FALSE, &mvp[0][0]);
+      glUniformMatrix4fv(transMatID, 1, GL_FALSE, &obj->transform[0][0]);
+      glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &normalMat[0][0]);
+      // draw
+      glDrawElements(GL_TRIANGLES,      // mode
+                     ent.indeciesSize,  // count
+                     GL_UNSIGNED_SHORT, // type
+                     (void*)0           // element array buffer offset
+      );
+    }
   }
 
   glDisableVertexAttribArray(0);

@@ -98,8 +98,8 @@ float Renderer::renderFrame(float ts) {
   glUseProgram(_stdShaderProg->programId);
 
   std::vector<BasicEntity>* ents = _scene.getEntities();
-  for (auto ent : *ents) {
-    _scene.renderEntityObjects(ent, _cameraID, camera, cameraPos,
+  for (u_int32_t i = 0; i < ents->size(); i++) {
+    _scene.renderEntityObjects((*ents)[i], _cameraID, camera, cameraPos,
                                _transformationID, _normalMatID, _cameraPosID);
   }
 
