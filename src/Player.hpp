@@ -13,6 +13,7 @@ private:
   GLFWwindow* _window;
   double _horAng, _vertAng;
   bool _enabled = false;
+  bool _wireframe = false, _wireframePressed = false;
 
 private:
   void freezeLogic();
@@ -26,5 +27,6 @@ public:
   void update(float ts);
   glm::mat4 getPlayerProjection();
   glm::vec3 getPlayerCameraPosition();
+  inline bool getWireframe() { return _wireframe; };
 };
 } // namespace Game

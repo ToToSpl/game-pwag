@@ -15,27 +15,30 @@ struct Shader {
   GLuint shaderId;
 };
 
-Shader* compileShader(std::string filepath);
+Shader compileShader(std::string filepath);
 
 struct ShaderProgram {
-  Shader *vertex, *fragment;
+  Shader vertex, fragment;
   GLuint programId;
 };
 
-ShaderProgram* compileProgram(Shader* vertex, Shader* fragment);
+ShaderProgram* compileProgram(std::string vertex, std::string fragment);
 
 class Renderer {
 private:
   GLFWwindow* _window;
   GLuint _VertexArrayID;
+  GLuint _currentProgID;
   bool _running = false;
-  Shader *_stdShaderFrag, *_stdShaderVert;
-  ShaderProgram* _stdShaderProg;
   GLuint _cameraID, _transformationID, _normalMatID, _cameraPosID;
 
   Scene& _scene;
   Player* _player;
   double _lastFrame;
+
+private:
+  ShaderProgram* _stdShaderProg;
+  ShaderProgram* _wireframeProg;
 
 public:
   Renderer(Scene& scene);

@@ -163,9 +163,6 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint camMatID,
                                 GLuint transMatID, GLuint normalMatID,
                                 GLuint cameraPosID) {
 
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, ent.vertArr);
   glVertexAttribPointer(0,        // attribute

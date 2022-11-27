@@ -61,6 +61,15 @@ void Player::update(float ts) {
   if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
     acc -= right;
 
+  // check additional
+  if (glfwGetKey(_window, GLFW_KEY_BACKSPACE) == GLFW_PRESS) {
+    if (!_wireframePressed) {
+      _wireframePressed = true;
+      _wireframe = !_wireframe;
+    }
+  } else
+    _wireframePressed = false;
+
   // // Jump
   // if (glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) {
   //   if (_position.y == 0.f) {
