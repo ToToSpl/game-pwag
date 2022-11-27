@@ -3,6 +3,7 @@
 #include "constants.h"
 #include <cstring>
 #include <iostream>
+#include <string.h>
 #include <string>
 
 namespace Game {
@@ -134,6 +135,68 @@ void textureCreateBox(Texture* tex, json& data, std::string& configPath) {
   glGenBuffers(1, &tex->normalID);
   glBindBuffer(GL_ARRAY_BUFFER, tex->normalID);
   glBufferData(GL_ARRAY_BUFFER, sizeof(float) * CUBE_NORMAL, tex->normals,
+               GL_STATIC_DRAW);
+
+  glGenTextures(1, &tex->textureID);
+  glBindTexture(GL_TEXTURE_2D, tex->textureID);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei)tex->width,
+               (GLsizei)tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->pixels);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+}
+
+void textureCreateObj(Texture* tex, json& data, std::string& configPath,
+                      std::vector<float>& UVs, std::vector<float>& normals,
+                      u_int16_t vertLen) {
+  // find texture path
+  std::string texFileName;
+  {
+    u_int32_t nameBegin = 0;
+    const char* str = configPath.c_str();
+    for (u_int32_t i = 0; i < configPath.length(); i++)
+      if (str[i] == '/')
+        nameBegin = i;
+    if (nameBegin > 0 && nameBegin < configPath.length() - 1)
+      nameBegin++;
+    texFileName = configPath.substr(0, nameBegin) + (std::string)data["source"];
+  }
+
+  {
+    // load png
+    std::vector<u_int8_t> pngArr;
+    if (unsigned error =
+            lodepng::decode(pngArr, tex->width, tex->height, texFileName)) {
+      std::cout << "PNG decoder error " << error << ": "
+                << lodepng_error_text(error) << std::endl;
+      abort();
+    }
+    // based on 4bit png convert to 3bit array
+    tex->pixels =
+        (u_int8_t*)malloc(sizeof(u_int8_t) * 3 * tex->width * tex->height);
+    u_int32_t pngI = 0, arrI = 0;
+    while (pngI < pngArr.size()) {
+      tex->pixels[arrI++] = pngArr[pngI++];
+      tex->pixels[arrI++] = pngArr[pngI++];
+      tex->pixels[arrI++] = pngArr[pngI++];
+      pngI++;
+    }
+  }
+
+  tex->UVs = (float*)malloc(UVs.size() * sizeof(float));
+  memcpy(tex->UVs, &UVs[0], UVs.size() * sizeof(float));
+  tex->normals = (float*)malloc(normals.size() * sizeof(float));
+  memcpy(tex->normals, &normals[0], normals.size() * sizeof(float));
+
+  // bind buffers
+  glGenBuffers(1, &tex->uvID);
+  glBindBuffer(GL_ARRAY_BUFFER, tex->uvID);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertLen * 2, tex->UVs,
+               GL_STATIC_DRAW);
+
+  glGenBuffers(1, &tex->normalID);
+  glBindBuffer(GL_ARRAY_BUFFER, tex->normalID);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertLen * 3, tex->normals,
                GL_STATIC_DRAW);
 
   glGenTextures(1, &tex->textureID);

@@ -5,7 +5,14 @@
 #include <OpenGL/OpenGL.h>
 #include <cmath>
 
+#include <cstring>
+#include <format>
+#include <fstream>
+#include <sstream>
+#include <string>
+
 #include <iostream>
+#include <unordered_map>
 
 namespace Game {
 Scene::Scene() {}
@@ -128,6 +135,8 @@ u_int32_t Scene::addBoxEntity(json& data, std::string configPath) {
     ent.special = EntitySpecial::NONE;
   else if (data["special"] == "flap")
     ent.special = EntitySpecial::FLAP;
+  else if (data["special"] == "breathing")
+    ent.special = EntitySpecial::BREATHE;
 
   glGenBuffers(1, &ent.vertArr);
   glBindBuffer(GL_ARRAY_BUFFER, ent.vertArr);
@@ -144,6 +153,140 @@ u_int32_t Scene::addBoxEntity(json& data, std::string configPath) {
 
   _basic_entities.push_back(ent);
   _basic_entity_dict[name] = _basic_entity_index;
+  return _basic_entity_index++;
+}
+
+void insertThreeFvalues(std::vector<u_int16_t>& t1, std::vector<u_int16_t>& t2,
+                        std::vector<u_int16_t>& t3, std::string& values) {
+  auto delimiter1 = values.find('/');
+  std::string token1 = values.substr(0, delimiter1);
+  values.erase(0, delimiter1 + 1);
+  auto delimiter2 = values.find('/');
+  std::string token2 = values.substr(0, delimiter2);
+  std::string token3 = values.substr(delimiter2 + 1, values.length() - 1);
+  t1.push_back(std::stof(token1) - 1);
+  t2.push_back(std::stof(token2) - 1);
+  t3.push_back(std::stof(token3) - 1);
+};
+
+u_int32_t Scene::addObjEntity(json& data, std::string configPath) {
+  BasicEntity ent;
+  // find obj path
+  std::string objFileName;
+  {
+    u_int32_t nameBegin = 0;
+    const char* str = configPath.c_str();
+    for (u_int32_t i = 0; i < configPath.length(); i++)
+      if (str[i] == '/')
+        nameBegin = i;
+    if (nameBegin > 0 && nameBegin < configPath.length() - 1)
+      nameBegin++;
+    objFileName = configPath.substr(0, nameBegin) + (std::string)data["source"];
+  }
+
+  for (u_int8_t i = 0; i < 3; i++)
+    ent.position[i] = (float)data["position"][i];
+
+  float scale = data["scale"];
+
+  // load raw vertex data
+  std::vector<float> vertecies, UVs, normals;
+  std::vector<u_int16_t> indeciesVertex, indeciesUV, indeciesNormals;
+  {
+    std::ifstream infile(objFileName);
+    std::string line;
+    std::string s1, s2, s3;
+    float x, y, z;
+
+    std::string param;
+    while (std::getline(infile, line)) {
+      std::istringstream iss(line);
+      if (!(iss >> param)) {
+        break;
+      }
+
+      if (param == "v") {
+        iss >> x >> y >> z;
+        vertecies.push_back(scale * x + ent.position[0]);
+        vertecies.push_back(scale * y + ent.position[1]);
+        vertecies.push_back(scale * z + ent.position[2]);
+      } else if (param == "vt") {
+        iss >> x >> y;
+        UVs.push_back(x);
+        UVs.push_back(y);
+      } else if (param == "vn") {
+        iss >> x >> y >> z;
+        normals.push_back(x);
+        normals.push_back(y);
+        normals.push_back(z);
+      } else if (param == "f") {
+        iss >> s1 >> s2 >> s3;
+        insertThreeFvalues(indeciesVertex, indeciesUV, indeciesNormals, s1);
+        insertThreeFvalues(indeciesVertex, indeciesUV, indeciesNormals, s2);
+        insertThreeFvalues(indeciesVertex, indeciesUV, indeciesNormals, s3);
+      }
+    }
+  }
+  std::vector<float> ordVert, ordUVs, ordNorms;
+  std::vector<u_int16_t> ordIndecies;
+  {
+    std::unordered_map<u_int64_t, u_int16_t> mapData;
+
+    u_int16_t index = 0;
+    for (u_int16_t i = 0; i < indeciesVertex.size(); i++) {
+      u_int64_t t1 = indeciesVertex[i];
+      u_int64_t t2 = indeciesUV[i];
+      u_int64_t t3 = indeciesNormals[i];
+      u_int64_t key = t3 << 32 | t2 << 16 | t1;
+
+      auto match = mapData.find(key);
+      if (match == mapData.end()) {
+        mapData[key] = index;
+        ordVert.push_back(vertecies[3 * t1 + 0]);
+        ordVert.push_back(vertecies[3 * t1 + 1]);
+        ordVert.push_back(vertecies[3 * t1 + 2]);
+        ordUVs.push_back(UVs[2 * t2 + 0]);
+        ordUVs.push_back(UVs[2 * t2 + 1]);
+        ordNorms.push_back(normals[3 * t3 + 0]);
+        ordNorms.push_back(normals[3 * t3 + 1]);
+        ordNorms.push_back(normals[3 * t3 + 2]);
+        ordIndecies.push_back(index);
+        index++;
+      } else {
+        ordIndecies.push_back(match->second);
+      }
+    }
+  }
+
+  ent.name = data["name"];
+  ent.vertecies = (float*)malloc(ordVert.size() * sizeof(float));
+  memcpy(ent.vertecies, &ordVert[0], ordVert.size() * sizeof(float));
+  ent.indecies = (u_int16_t*)malloc(ordIndecies.size() * sizeof(u_int16_t));
+  memcpy(ent.indecies, &ordIndecies[0], ordIndecies.size() * sizeof(u_int16_t));
+  ent.indeciesSize = ordIndecies.size();
+
+  if (data["special"] == "none")
+    ent.special = EntitySpecial::NONE;
+  else if (data["special"] == "flap")
+    ent.special = EntitySpecial::FLAP;
+  else if (data["special"] == "breathing")
+    ent.special = EntitySpecial::BREATHE;
+
+  glGenBuffers(1, &ent.vertArr);
+  glBindBuffer(GL_ARRAY_BUFFER, ent.vertArr);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ordVert.size(), ent.vertecies,
+               GL_STATIC_DRAW);
+
+  glGenBuffers(1, &ent.indArr);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ent.indArr);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u_int16_t) * ordIndecies.size(),
+               ent.indecies, GL_STATIC_DRAW);
+
+  textureCreateObj(&ent.texture, data["texture"], configPath, ordUVs, ordNorms,
+                   ordVert.size() / 3);
+
+  _basic_entities.push_back(ent);
+  _basic_entity_dict[ent.name] = _basic_entity_index;
   return _basic_entity_index++;
 }
 

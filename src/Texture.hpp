@@ -15,6 +15,9 @@ struct Texture {
 };
 
 void textureCreateBox(Texture* tex, json& data, std::string& configPath);
+void textureCreateObj(Texture* tex, json& data, std::string& configPath,
+                      std::vector<float>& UVs, std::vector<float>& normals,
+                      u_int16_t vertLen);
 void textureBindAttrib(Texture* tex, u_int32_t attrib);
 void textureBindNormals(Texture* tex, u_int32_t attrib);
 

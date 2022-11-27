@@ -21,7 +21,7 @@ struct SceneObject {
   float scale = 1.0;
 };
 
-enum EntitySpecial { NONE, FLAP };
+enum EntitySpecial { NONE, FLAP, BREATHE };
 
 struct BasicEntity {
   std::string name;
@@ -49,6 +49,7 @@ public:
 
 public:
   u_int32_t addBoxEntity(json& data, std::string configPath);
+  u_int32_t addObjEntity(json& data, std::string configPath);
   SceneObject* spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot);
   void renderEntityObjects(BasicEntity& ent, GLuint caMatID, glm::mat4& camMat,
                            glm::vec3& camPos, GLuint transMatID,
