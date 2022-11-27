@@ -1,0 +1,15 @@
+{
+  "shape": [
+    {
+      "type": "obj",
+      "name": "katana",
+      "special": "none",
+      "position": [0, 0, 0],
+      "scale": 0.5,
+      "source": "katana.obj",
+      "texture": {
+        "source": "katana.png"
+      }
+    }
+  ]
+}
