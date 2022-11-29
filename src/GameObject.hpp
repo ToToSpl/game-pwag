@@ -22,8 +22,8 @@ public:
   ~GameObject();
 
 public:
-  GameEntity spawn(glm::vec3 pos, glm::quat rot);
-  void remove(GameEntity& ent);
+  GameEntity* spawn(glm::vec3 pos, glm::quat rot);
+  void remove(GameEntity* ent);
 
 private:
   Scene& _scene;

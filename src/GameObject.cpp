@@ -28,23 +28,22 @@ void GameObject::loadObject() {
   }
 }
 
-GameEntity GameObject::spawn(glm::vec3 pos, glm::quat rot) {
-  GameEntity ent;
-  for (u_int32_t i = 0; i < _entitiesIDs.size(); i++) {
-    ent.objects.push_back(
+GameEntity* GameObject::spawn(glm::vec3 pos, glm::quat rot) {
+  GameEntity* ent = new GameEntity;
+  for (u_int32_t i = 0; i < _entitiesIDs.size(); i++)
+    ent->objects.push_back(
         {_entitiesIDs[i], _scene.spawnEntity(_entitiesIDs[i], pos, rot)});
-  }
-  ent.exists = true;
+
+  ent->exists = true;
   return ent;
 }
 
-void GameObject::remove(GameEntity& ent) {
-  if (!ent.exists)
-    return;
-  for (u_int32_t i = 0; i < ent.objects.size(); i++) {
-    _scene.removeEntity(ent.objects[i].first, ent.objects[i].second);
-  }
-  ent.exists = false;
+void GameObject::remove(GameEntity* ent) {
+  if (ent->exists)
+    for (u_int32_t i = 0; i < ent->objects.size(); i++)
+      _scene.removeEntity(ent->objects[i].first, ent->objects[i].second);
+  ent->exists = false;
+  delete ent;
 }
 
 } // namespace Game
