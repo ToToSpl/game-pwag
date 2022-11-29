@@ -301,10 +301,19 @@ SceneObject* Scene::spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot) {
   return obj;
 }
 
+void Scene::removeEntity(u_int32_t entId, SceneObject* obj) {
+  auto& vec = _basic_entities[entId].objects;
+  vec.erase(std::remove(vec.begin(), vec.end(), obj), vec.end());
+  delete obj;
+}
+
 void Scene::renderEntityObjects(BasicEntity& ent, GLuint camMatID,
                                 glm::mat4& camMat, glm::vec3& camPos,
                                 GLuint transMatID, GLuint normalMatID,
                                 GLuint cameraPosID) {
+
+  if (ent.objects.size() == 0)
+    return;
 
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, ent.vertArr);

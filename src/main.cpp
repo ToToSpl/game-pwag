@@ -36,14 +36,28 @@ int main(int argc, char** argv) {
 
   GameObject floor(scene, BUILD_TO_ROOT + FLOOR_PATH);
   floor.spawn({0, 0, 0}, {1, 0, 0, 0});
+  float katanaTime = 0.f;
+  bool katanaOn = true;
 
   GameObject katana(scene, BUILD_TO_ROOT + KATANA_PATH);
-  katana.spawn({0, 0.9, -1}, {0, 1, 0, 0});
+  auto katanaEnt = katana.spawn({0, 0.9, -1}, {0, 1, 0, 0});
 
   float frame_time, lastFrame = 0.f;
   while (renderer.shouldRun()) {
     auto start = std::chrono::high_resolution_clock::now();
     fps_logger(lastFrame);
+
+    katanaTime += lastFrame;
+    if (katanaTime > 2000.f) {
+      if (katanaOn) {
+        katana.remove(katanaEnt);
+        katanaOn = false;
+      } else {
+        katanaEnt = katana.spawn({0, 0.9, -1}, {0, 1, 0, 0});
+        katanaOn = true;
+      }
+      katanaTime = 0.f;
+    }
 
     renderer.renderFrame(lastFrame);
 

@@ -51,6 +51,7 @@ public:
   u_int32_t addBoxEntity(json& data, std::string configPath);
   u_int32_t addObjEntity(json& data, std::string configPath);
   SceneObject* spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot);
+  void removeEntity(u_int32_t entId, SceneObject* obj);
   void renderEntityObjects(BasicEntity& ent, GLuint caMatID, glm::mat4& camMat,
                            glm::vec3& camPos, GLuint transMatID,
                            GLuint normalMatID, GLuint cameraPosID);

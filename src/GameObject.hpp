@@ -11,13 +11,19 @@ namespace Game {
 
 using json = nlohmann::json;
 
+struct GameEntity {
+  bool exists;
+  std::vector<std::pair<u_int32_t, SceneObject*>> objects;
+};
+
 class GameObject {
 public:
   GameObject(Scene& scene, std::string configFile);
   ~GameObject();
 
 public:
-  void spawn(glm::vec3 pos, glm::quat rot);
+  GameEntity spawn(glm::vec3 pos, glm::quat rot);
+  void remove(GameEntity& ent);
 
 private:
   Scene& _scene;
