@@ -47,17 +47,8 @@ int main(int argc, char** argv) {
     auto start = std::chrono::high_resolution_clock::now();
     fps_logger(lastFrame);
 
+    katana.moveTo(katanaEnt, {0, 1.2 + 0.3 * sin(0.001 * katanaTime), -1});
     katanaTime += lastFrame;
-    if (katanaTime > 2000.f) {
-      if (katanaOn) {
-        katana.remove(katanaEnt);
-        katanaOn = false;
-      } else {
-        katanaEnt = katana.spawn({0, 0.9, -1}, {0, 1, 0, 0});
-        katanaOn = true;
-      }
-      katanaTime = 0.f;
-    }
 
     renderer.renderFrame(lastFrame);
 

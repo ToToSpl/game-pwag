@@ -33,17 +33,41 @@ GameEntity* GameObject::spawn(glm::vec3 pos, glm::quat rot) {
   for (u_int32_t i = 0; i < _entitiesIDs.size(); i++)
     ent->objects.push_back(
         {_entitiesIDs[i], _scene.spawnEntity(_entitiesIDs[i], pos, rot)});
-
-  ent->exists = true;
   return ent;
 }
 
 void GameObject::remove(GameEntity* ent) {
-  if (ent->exists)
-    for (u_int32_t i = 0; i < ent->objects.size(); i++)
-      _scene.removeEntity(ent->objects[i].first, ent->objects[i].second);
-  ent->exists = false;
+  for (u_int32_t i = 0; i < ent->objects.size(); i++)
+    _scene.removeEntity(ent->objects[i].first, ent->objects[i].second);
   delete ent;
+}
+
+void GameObject::translate(GameEntity* ent, glm::vec3 vec) {
+  for (u_int32_t i = 0; i < ent->objects.size(); i++) {
+    auto obj = ent->objects[i].second;
+    obj->transform = glm::translate(obj->transform, vec);
+    obj->moved = true;
+  }
+}
+
+void GameObject::moveTo(GameEntity* ent, glm::vec3 vec) {
+  for (u_int32_t i = 0; i < ent->objects.size(); i++) {
+    auto obj = ent->objects[i].second;
+    glm::vec3 pos(obj->transform[3]);
+    obj->transform = glm::translate(obj->transform, pos - vec);
+    obj->moved = true;
+  }
+}
+
+void GameObject::rotate(GameEntity* ent, glm::quat rot) {
+  for (u_int32_t i = 0; i < ent->objects.size(); i++) {
+    auto obj = ent->objects[i].second;
+    glm::vec3 pos(obj->transform[3]);
+    glm::mat4 rotM = glm::toMat4(rot);
+    glm::mat4 trans = glm::translate(glm::mat4(1.0f), pos);
+    obj->transform = trans * rotM;
+    obj->moved = true;
+  }
 }
 
 } // namespace Game
