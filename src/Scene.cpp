@@ -337,10 +337,14 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint camMatID,
       // set uniforms
       SceneObject* obj = ent.objects[i];
       glm::mat4 mvp = camMat * obj->transform;
-      glm::mat3 normalMat = glm::transpose(glm::inverse(obj->transform));
+      if (obj->moved) {
+        obj->normalMat = glm::transpose(glm::inverse(obj->transform));
+        obj->moved = false;
+      }
+
       glUniformMatrix4fv(camMatID, 1, GL_FALSE, &mvp[0][0]);
       glUniformMatrix4fv(transMatID, 1, GL_FALSE, &obj->transform[0][0]);
-      glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &normalMat[0][0]);
+      glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &obj->normalMat[0][0]);
       // draw
       glDrawElements(GL_TRIANGLES,      // mode
                      ent.indeciesSize,  // count

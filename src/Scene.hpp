@@ -18,6 +18,8 @@ using json = nlohmann::json;
 
 struct SceneObject {
   glm::mat4 transform = glm::mat4(1);
+  glm::mat3 normalMat;
+  bool moved = true;
   float scale = 1.0;
 };
 
