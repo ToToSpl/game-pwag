@@ -307,7 +307,7 @@ void Scene::removeEntity(u_int32_t entId, SceneObject* obj) {
   delete obj;
 }
 
-void Scene::renderEntityObjects(BasicEntity& ent, GLuint camMatID,
+void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint camMatID,
                                 glm::mat4& camMat, glm::vec3& camPos,
                                 GLuint transMatID, GLuint normalMatID,
                                 GLuint cameraPosID) {
@@ -353,7 +353,7 @@ void Scene::renderEntityObjects(BasicEntity& ent, GLuint camMatID,
       );
     }
   } else if (ent.special == EntitySpecial::FLAP) {
-    ent.specialVar += 0.1;
+    ent.specialVar += FLAP_SPEED * ts_ms;
     if (ent.specialVar > 6.28)
       ent.specialVar = 0.f;
 

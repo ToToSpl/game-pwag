@@ -1,5 +1,6 @@
 #pragma once
 #include "Camera.hpp"
+#include "GameObject.hpp"
 #include "constants.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -14,6 +15,8 @@ private:
   double _horAng, _vertAng;
   bool _enabled = false;
   bool _wireframe = false, _wireframePressed = false;
+  bool _mousePressed = false;
+  GameEntity* _katana = nullptr;
 
 private:
   void freezeLogic();
@@ -27,6 +30,8 @@ public:
   void update(float ts);
   glm::mat4 getPlayerProjection();
   glm::vec3 getPlayerCameraPosition();
+  void addKatana(GameObject& katana);
   inline bool getWireframe() { return _wireframe; };
+  inline bool getMousePressed() { return _mousePressed; };
 };
 } // namespace Game

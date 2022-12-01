@@ -70,6 +70,11 @@ void Player::update(float ts) {
   } else
     _wireframePressed = false;
 
+  if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS)
+    _mousePressed = true;
+  else
+    _mousePressed = false;
+
   // // Jump
   // if (glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) {
   //   if (_position.y == 0.f) {
@@ -119,6 +124,10 @@ glm::vec3 Player::getPlayerCameraPosition() {
   glm::vec3 pos = {0.f, 1.8f, 0.f};
   pos += _position;
   return pos;
+}
+
+void Player::addKatana(GameObject& katana) {
+  _katana = katana.spawn(KATANA_POS_REL, {1, 0, 0, 0});
 }
 
 } // namespace Game
