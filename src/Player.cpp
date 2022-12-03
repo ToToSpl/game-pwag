@@ -1,6 +1,5 @@
 #include "Player.hpp"
 #include "constants.h"
-
 #include <iostream>
 
 namespace Game {
@@ -31,8 +30,10 @@ void Player::update(float ts) {
 
   glfwSetCursorPos(_window, centerX, centerY);
 
-  _horAng += MOUSE_SPEED * ts * (centerX - xpos);
-  _vertAng += MOUSE_SPEED * ts * (centerY - ypos);
+  if (!_mousePressed) {
+    _horAng += MOUSE_SPEED * ts * (centerX - xpos);
+    _vertAng += MOUSE_SPEED * ts * (centerY - ypos);
+  }
 
   if (_vertAng < -1.57f)
     _vertAng = -1.57f;
@@ -70,10 +71,13 @@ void Player::update(float ts) {
   } else
     _wireframePressed = false;
 
-  if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS)
+  if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
     _mousePressed = true;
-  else
+    _mousePressedFrame++;
+  } else {
     _mousePressed = false;
+    _mousePressedFrame = 0;
+  }
 
   if (glm::length(acc) != 0.0f)
     acc = PLAYER_ACC * ts * glm::normalize(acc);
@@ -94,9 +98,13 @@ void Player::update(float ts) {
 }
 
 void Player::placeKatana() {
-  // _katanaObj->attachTo(_katanaEnt, {0, 0, 0}, _direction, _up, {0, 0, 0});
-  _katanaObj->attachTo(_katanaEnt, _position + glm::vec3(CAMERA_POS_REL),
-                       _direction, KATANA_POS_REL);
+  glm::vec3 offset(CAMERA_POS_REL);
+  if (_mousePressed) {
+    float step = _mousePressedFrame * 0.002;
+    offset.y += step > 0.05f ? 0.05f : step;
+  }
+  _katanaObj->attachTo(_katanaEnt, _position + offset, _direction,
+                       KATANA_POS_REL);
 }
 
 void Player::freezeLogic() {

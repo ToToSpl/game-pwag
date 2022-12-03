@@ -16,6 +16,7 @@ private:
   bool _enabled = false;
   bool _wireframe = false, _wireframePressed = false;
   bool _mousePressed = false;
+  u_int32_t _mousePressedFrame = 0;
   GameEntity* _katanaEnt = nullptr;
   GameObject* _katanaObj = nullptr;
 

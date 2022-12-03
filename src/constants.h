@@ -25,7 +25,7 @@
   { 0.f, 1.8f, 0.f }
 
 #define KATANA_POS_REL                                                         \
-  { -0.3, -0.3, 0.8 }
+  { -0.2, -0.25, 0.75 }
 
 #define FPS_AVERAGE 10 // running average for fps calculation
 #define SLOW_MO_MULT 0.3f
