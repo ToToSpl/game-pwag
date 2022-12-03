@@ -98,13 +98,13 @@ void Player::update(float ts) {
 }
 
 void Player::placeKatana() {
-  glm::vec3 offset(CAMERA_POS_REL);
+  glm::vec3 offset(KATANA_POS_REL);
   if (_mousePressed) {
     float step = _mousePressedFrame * 0.002;
     offset.y += step > 0.05f ? 0.05f : step;
   }
-  _katanaObj->attachTo(_katanaEnt, _position + offset, _direction,
-                       KATANA_POS_REL);
+  _katanaObj->attachTo(_katanaEnt, _position + glm::vec3(CAMERA_POS_REL),
+                       _direction, offset);
 }
 
 void Player::freezeLogic() {
