@@ -1,5 +1,6 @@
 #include "GameObject.hpp"
 #include <fstream>
+#include <glm/gtx/transform.hpp>
 #include <iostream>
 
 namespace Game {
@@ -66,6 +67,34 @@ void GameObject::rotate(GameEntity* ent, glm::quat rot) {
     glm::mat4 rotM = glm::toMat4(rot);
     glm::mat4 trans = glm::translate(glm::mat4(1.0f), pos);
     obj->transform = trans * rotM;
+    obj->moved = true;
+  }
+}
+
+void GameObject::attachTo(GameEntity* ent, glm::vec3 pos, glm::vec3 dir,
+                          glm::vec3 offset) {
+
+  glm::vec3 R = glm::normalize(glm::cross({0, 1, 0}, dir));
+  glm::vec3 U = glm::normalize(glm::cross(dir, R));
+  float dotYaw = glm::dot(R, {1, 0, 0});
+  float angleYaw = glm::acos(dotYaw);
+  if (R.z > 0.f)
+    angleYaw *= -1.f;
+
+  float dotPitch = glm::dot(U, {0, 1, 0});
+  float anglePitch = glm::acos(dotPitch);
+  if (glm::dot(dir, {0, 1, 0}) > 0.f)
+    anglePitch *= -1.f;
+
+  glm::mat4 rotYaw = glm::rotate(angleYaw, glm::vec3({0, 1, 0}));
+  glm::mat4 rotPitch = glm::rotate(anglePitch, glm::vec3({1, 0, 0}));
+
+  glm::mat4 view = glm::translate(glm::mat4(1), pos) * rotYaw * rotPitch *
+                   glm::translate(glm::mat4(1), offset);
+
+  for (u_int32_t i = 0; i < ent->objects.size(); i++) {
+    auto obj = ent->objects[i].second;
+    obj->transform = view;
     obj->moved = true;
   }
 }

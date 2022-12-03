@@ -10,16 +10,18 @@ namespace Game {
 class Player {
 private:
   Camera* _camera;
-  glm::vec3 _position, _up, _direction, _speed;
+  glm::vec3 _position, _up, _right, _direction, _speed;
   GLFWwindow* _window;
   double _horAng, _vertAng;
   bool _enabled = false;
   bool _wireframe = false, _wireframePressed = false;
   bool _mousePressed = false;
-  GameEntity* _katana = nullptr;
+  GameEntity* _katanaEnt = nullptr;
+  GameObject* _katanaObj = nullptr;
 
 private:
   void freezeLogic();
+  void placeKatana();
 
 public:
   Player(glm::vec3 startPos, double horAngle, double vertAngle,

@@ -21,9 +21,13 @@
 #define PLAYER_DRAG 0.98989397941f
 #define PLAYER_JUMP 0.01f
 #define MOUSE_SPEED 0.001f
+#define CAMERA_POS_REL                                                         \
+  { 0.f, 1.8f, 0.f }
 
 #define KATANA_POS_REL                                                         \
-  { 0.5, -0.2, 0.2 }
+  { -0.3, -0.3, 0.8 }
 
 #define FPS_AVERAGE 10 // running average for fps calculation
 #define SLOW_MO_MULT 0.3f
+#define FRAME_RATE 45.0f
+#define FRAME_TIME_MS (1000.f / FRAME_RATE)

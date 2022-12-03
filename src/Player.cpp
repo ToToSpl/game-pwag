@@ -42,10 +42,10 @@ void Player::update(float ts) {
   _direction = {cos(_vertAng) * sin(_horAng), sin(_vertAng),
                 cos(_vertAng) * cos(_horAng)};
 
-  glm::vec3 right =
+  _right =
       glm::vec3(sin(_horAng - 3.14f / 2.0f), 0, cos(_horAng - 3.14f / 2.0f));
 
-  _up = glm::cross(right, _direction);
+  _up = glm::cross(_right, _direction);
 
   glm::vec3 dir2d = {sin(_horAng), 0.f, cos(_horAng)};
   glm::vec3 acc = {0.0, 0.0, 0.0};
@@ -56,10 +56,10 @@ void Player::update(float ts) {
     acc -= dir2d;
   // Strafe right
   if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
-    acc += right;
+    acc += _right;
   // Strafe left
   if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
-    acc -= right;
+    acc -= _right;
 
   // check additional
   if (glfwGetKey(_window, GLFW_KEY_BACKSPACE) == GLFW_PRESS) {
@@ -75,14 +75,6 @@ void Player::update(float ts) {
   else
     _mousePressed = false;
 
-  // // Jump
-  // if (glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-  //   if (_position.y == 0.f) {
-  //     _position.y = 0.1f;
-  //     _speed.y += ts * PLAYER_JUMP;
-  //   }
-  // }
-
   if (glm::length(acc) != 0.0f)
     acc = PLAYER_ACC * ts * glm::normalize(acc);
 
@@ -97,6 +89,14 @@ void Player::update(float ts) {
   // clip player to ground
   if (_position.y != 0.f)
     _position.y = 0.f;
+
+  placeKatana();
+}
+
+void Player::placeKatana() {
+  // _katanaObj->attachTo(_katanaEnt, {0, 0, 0}, _direction, _up, {0, 0, 0});
+  _katanaObj->attachTo(_katanaEnt, _position + glm::vec3(CAMERA_POS_REL),
+                       _direction, KATANA_POS_REL);
 }
 
 void Player::freezeLogic() {
@@ -115,9 +115,8 @@ void Player::freezeLogic() {
 }
 
 glm::mat4 Player::getPlayerProjection() {
-  glm::vec3 camera_pos = {0.f, 1.8f, 0.f};
-  camera_pos += _position;
-  return _camera->getProjection(camera_pos, _direction, _up);
+  return _camera->getProjection(_position + glm::vec3(CAMERA_POS_REL),
+                                _direction, _up);
 }
 
 glm::vec3 Player::getPlayerCameraPosition() {
@@ -127,7 +126,8 @@ glm::vec3 Player::getPlayerCameraPosition() {
 }
 
 void Player::addKatana(GameObject& katana) {
-  _katana = katana.spawn(KATANA_POS_REL, {1, 0, 0, 0});
+  _katanaObj = &katana;
+  _katanaEnt = katana.spawn({0, 0, 0}, {1, 0, 0, 0});
 }
 
 } // namespace Game
