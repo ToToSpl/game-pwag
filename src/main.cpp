@@ -48,6 +48,14 @@ int main(int argc, char** argv) {
 
     renderer.renderFrame(lastFrame);
 
+    auto renderEnd = std::chrono::high_resolution_clock::now();
+    float renderTime =
+        std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start)
+            .count();
+    if (renderTime < FRAME_TIME_MS)
+      std::this_thread::sleep_for(
+          std::chrono::milliseconds((int)(FRAME_TIME_MS - renderTime)));
+
     auto end = std::chrono::high_resolution_clock::now();
     lastFrame =
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
