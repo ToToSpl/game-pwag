@@ -12,6 +12,7 @@ Player::Player(glm::vec3 startPos, double horAngle, double vertAngle,
   glfwGetWindowSize(_window, &w, &h);
   _camera = new Camera(_window, w, h, true);
   _speed = {0.0f, 0.0f, 0.0f};
+  _cutDir = {0, 0};
 }
 
 Player::~Player() { delete _camera; }
@@ -33,6 +34,10 @@ void Player::update(float ts) {
   if (!_mousePressed) {
     _horAng += MOUSE_SPEED * ts * (centerX - xpos);
     _vertAng += MOUSE_SPEED * ts * (centerY - ypos);
+  } else {
+    glm::vec2 dir({centerX - xpos, centerY - ypos});
+    if (dir.x != 0 && dir.y != 0)
+      _cutDir = dir;
   }
 
   if (_vertAng < -1.57f)
@@ -74,9 +79,15 @@ void Player::update(float ts) {
   if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
     _mousePressed = true;
     _mousePressedFrame++;
-  } else {
+  } else if (_mousePressed) {
+    if (_cutDir.x != 0 && _cutDir.y != 0) {
+      _cutDir = glm::normalize(_cutDir);
+      // do stuff with cutDir
+    }
+
     _mousePressed = false;
     _mousePressedFrame = 0;
+    _cutDir = glm::vec2({0, 0});
   }
 
   if (glm::length(acc) != 0.0f)

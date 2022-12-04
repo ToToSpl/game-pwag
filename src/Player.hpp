@@ -11,6 +11,7 @@ class Player {
 private:
   Camera* _camera;
   glm::vec3 _position, _up, _right, _direction, _speed;
+  glm::vec2 _cutDir;
   GLFWwindow* _window;
   double _horAng, _vertAng;
   bool _enabled = false;
