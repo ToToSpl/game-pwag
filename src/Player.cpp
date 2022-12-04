@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "constants.h"
+#include <glm/gtx/transform.hpp>
 #include <iostream>
 
 namespace Game {
@@ -105,17 +106,22 @@ void Player::update(float ts) {
   if (_position.y != 0.f)
     _position.y = 0.f;
 
-  placeKatana();
+  placeKatana(ts);
+  _gameTime += ts;
 }
 
-void Player::placeKatana() {
+void Player::placeKatana(float ts_ms) {
   glm::vec3 offset(KATANA_POS_REL);
   if (_mousePressed) {
     float step = _mousePressedFrame * 0.002;
     offset.y += step > 0.05f ? 0.05f : step;
+
+  } else {
+    offset.y += 0.01f * sin(_gameTime * 0.0015);
   }
+  glm::mat4 rot = glm::rotate(0.0f, glm::vec3({0, 0, 1}));
   _katanaObj->attachTo(_katanaEnt, _position + glm::vec3(CAMERA_POS_REL),
-                       _direction, offset);
+                       _direction, offset, rot);
 }
 
 void Player::freezeLogic() {

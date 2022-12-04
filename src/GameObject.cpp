@@ -72,7 +72,7 @@ void GameObject::rotate(GameEntity* ent, glm::quat rot) {
 }
 
 void GameObject::attachTo(GameEntity* ent, glm::vec3 pos, glm::vec3 dir,
-                          glm::vec3 offset) {
+                          glm::vec3 offset, glm::mat4 init_rot) {
 
   glm::vec3 R = glm::normalize(glm::cross({0, 1, 0}, dir));
   glm::vec3 U = glm::normalize(glm::cross(dir, R));
@@ -90,7 +90,7 @@ void GameObject::attachTo(GameEntity* ent, glm::vec3 pos, glm::vec3 dir,
   glm::mat4 rotPitch = glm::rotate(anglePitch, glm::vec3({1, 0, 0}));
 
   glm::mat4 view = glm::translate(glm::mat4(1), pos) * rotYaw * rotPitch *
-                   glm::translate(glm::mat4(1), offset);
+                   glm::translate(glm::mat4(1), offset) * init_rot;
 
   for (u_int32_t i = 0; i < ent->objects.size(); i++) {
     auto obj = ent->objects[i].second;

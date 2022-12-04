@@ -13,6 +13,7 @@ private:
   glm::vec3 _position, _up, _right, _direction, _speed;
   glm::vec2 _cutDir;
   GLFWwindow* _window;
+  float _gameTime = 0.f;
   double _horAng, _vertAng;
   bool _enabled = false;
   bool _wireframe = false, _wireframePressed = false;
@@ -23,7 +24,7 @@ private:
 
 private:
   void freezeLogic();
-  void placeKatana();
+  void placeKatana(float ts_ms);
 
 public:
   Player(glm::vec3 startPos, double horAngle, double vertAngle,
