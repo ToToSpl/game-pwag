@@ -25,6 +25,7 @@ add_executable(
   src/Texture.cpp
   src/Camera.cpp
   src/Player.cpp
+  src/Duck.cpp
   lib/lodepng.cpp)
 
 target_link_libraries(game -lglfw -lglew "-framework Cocoa" "-framework OpenGL"
