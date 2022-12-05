@@ -31,8 +31,7 @@ void Player::update(float ts) {
   double centerX = glm::ceil(scrnSize.first / 2.0f);
   double centerY = glm::ceil(scrnSize.second / 2.0f);
 
-  if (!_mousePressed)
-    glfwSetCursorPos(_window, centerX, centerY);
+  glfwSetCursorPos(_window, centerX, centerY);
 
   if (!_mousePressed) {
     _horAng += MOUSE_SPEED * ts * (centerX - xpos);
@@ -94,7 +93,6 @@ void Player::update(float ts) {
 
     _mousePressed = false;
     _mousePressedFrame = 0;
-    glfwSetCursorPos(_window, centerX, centerY);
   }
 
   if (glm::length(acc) != 0.0f)
