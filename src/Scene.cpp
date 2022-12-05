@@ -310,7 +310,7 @@ void Scene::removeEntity(u_int32_t entId, SceneObject* obj) {
 void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint camMatID,
                                 glm::mat4& camMat, glm::vec3& camPos,
                                 GLuint transMatID, GLuint normalMatID,
-                                GLuint cameraPosID) {
+                                GLuint cameraPosID, GLuint aliveID) {
 
   if (ent.objects.size() == 0)
     return;
@@ -345,6 +345,7 @@ void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint camMatID,
       glUniformMatrix4fv(camMatID, 1, GL_FALSE, &mvp[0][0]);
       glUniformMatrix4fv(transMatID, 1, GL_FALSE, &obj->transform[0][0]);
       glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &obj->normalMat[0][0]);
+      glUniform1i(aliveID, obj->alive);
       // draw
       glDrawElements(GL_TRIANGLES,      // mode
                      ent.indeciesSize,  // count
@@ -376,6 +377,7 @@ void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint camMatID,
       glUniformMatrix4fv(camMatID, 1, GL_FALSE, &mvp[0][0]);
       glUniformMatrix4fv(transMatID, 1, GL_FALSE, &obj->transform[0][0]);
       glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &normalMat[0][0]);
+      glUniform1i(aliveID, obj->alive);
       // draw
       glDrawElements(GL_TRIANGLES,      // mode
                      ent.indeciesSize,  // count

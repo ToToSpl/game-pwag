@@ -99,4 +99,11 @@ void GameObject::attachTo(GameEntity* ent, glm::vec3 pos, glm::vec3 dir,
   }
 }
 
+void GameObject::kill(GameEntity* ent) {
+  for (u_int32_t i = 0; i < ent->objects.size(); i++) {
+    auto obj = ent->objects[i].second;
+    obj->alive = 0;
+  }
+}
+
 } // namespace Game

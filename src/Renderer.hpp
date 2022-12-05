@@ -30,7 +30,7 @@ private:
   GLuint _VertexArrayID;
   GLuint _currentProgID;
   bool _running = false;
-  GLuint _cameraID, _transformationID, _normalMatID, _cameraPosID;
+  GLuint _cameraID, _transformationID, _normalMatID, _cameraPosID, _aliveID;
 
   Scene& _scene;
   Player* _player;

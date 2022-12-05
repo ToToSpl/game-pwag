@@ -25,13 +25,16 @@ int main(int argc, char** argv) {
   // duck.spawn({0, 1, 0}, {1, 0, 0, 0});
   // duck.spawn({0, 2.5, 0}, {0, 0, 0, 1});
   u_int32_t box_side = 4;
+  std::vector<GameEntity*> ducks;
   for (u_int32_t i = 0; i < box_side; i++) {
     for (u_int32_t j = 0; j < box_side; j++) {
       for (u_int32_t k = 0; k < box_side; k++) {
-        duck.spawn({i, j + 1.f, k}, {1, 0, 0, 0});
+        ducks.push_back(duck.spawn({i, j + 1.f, k}, {1, 0, 0, 0}));
       }
     }
   }
+
+  duck.kill(ducks[0]);
 
   GameObject floor(scene, BUILD_TO_ROOT + FLOOR_PATH);
   floor.spawn({0, 0, 0}, {1, 0, 0, 0});

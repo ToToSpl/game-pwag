@@ -20,6 +20,7 @@ struct SceneObject {
   glm::mat4 transform = glm::mat4(1);
   glm::mat3 normalMat;
   bool moved = true;
+  int alive = 1;
   float scale = 1.0;
 };
 
@@ -57,7 +58,7 @@ public:
   void renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint caMatID,
                            glm::mat4& camMat, glm::vec3& camPos,
                            GLuint transMatID, GLuint normalMatID,
-                           GLuint cameraPosID);
+                           GLuint cameraPosID, GLuint aliveID);
   inline std::vector<BasicEntity>* getEntities() { return &_basic_entities; };
 };
 } // namespace Game

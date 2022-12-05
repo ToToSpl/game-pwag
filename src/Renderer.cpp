@@ -78,6 +78,7 @@ bool Renderer::init(std::string window_name) {
   _transformationID = glGetUniformLocation(_stdShaderProg->programId, "M");
   _normalMatID = glGetUniformLocation(_stdShaderProg->programId, "NormalMat");
   _cameraPosID = glGetUniformLocation(_stdShaderProg->programId, "V");
+  _aliveID = glGetUniformLocation(_stdShaderProg->programId, "alive");
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
@@ -106,6 +107,7 @@ float Renderer::renderFrame(float ts) {
       _normalMatID =
           glGetUniformLocation(_stdShaderProg->programId, "NormalMat");
       _cameraPosID = glGetUniformLocation(_stdShaderProg->programId, "V");
+      _aliveID = glGetUniformLocation(_stdShaderProg->programId, "alive");
     }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -113,7 +115,8 @@ float Renderer::renderFrame(float ts) {
     std::vector<BasicEntity>* ents = _scene.getEntities();
     for (u_int32_t i = 0; i < ents->size(); i++) {
       _scene.renderEntityObjects(ts, (*ents)[i], _cameraID, camera, cameraPos,
-                                 _transformationID, _normalMatID, _cameraPosID);
+                                 _transformationID, _normalMatID, _cameraPosID,
+                                 _aliveID);
     }
   } else {
 
@@ -128,7 +131,8 @@ float Renderer::renderFrame(float ts) {
     std::vector<BasicEntity>* ents = _scene.getEntities();
     for (u_int32_t i = 0; i < ents->size(); i++) {
       _scene.renderEntityObjects(ts, (*ents)[i], _cameraID, camera, cameraPos,
-                                 _transformationID, _normalMatID, _cameraPosID);
+                                 _transformationID, _normalMatID, _cameraPosID,
+                                 _aliveID);
     }
   }
 

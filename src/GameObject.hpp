@@ -28,6 +28,7 @@ public:
   void rotate(GameEntity* ent, glm::quat rot);
   void attachTo(GameEntity* ent, glm::vec3 pos, glm::vec3 dir, glm::vec3 offset,
                 glm::mat4 init_rot);
+  void kill(GameEntity* ent);
 
 private:
   Scene& _scene;
