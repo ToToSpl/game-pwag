@@ -1,6 +1,7 @@
 #include "Duck.hpp"
 #include "GameObject.hpp"
 #include "constants.h"
+#include "glm/gtc/random.hpp"
 #include "glm/gtx/norm.hpp"
 #include "glm/gtx/quaternion.hpp"
 #include "glm/gtx/transform.hpp"
@@ -14,8 +15,10 @@ Duck::Duck(GameObject* handler, Player* player)
   glm::vec4 pos(glm::vec3(DUCK_START_POSITION), 0.f);
   _position = glm::vec3(pos * glm::rotate(pointAngle, glm::vec3({0, 1, 0})));
   _circlePoint = _position - glm::vec3(DUCK_CIRCLE_VEC);
-  _orientation = glm::angleAxis(-pointAngle + 1.57f, glm::vec3({0, 1, 0}));
+  // _orientation = glm::angleAxis(pointAngle + 1.57f, glm::vec3({0, 1, 0}));
   _entity = _handler->spawn(_position, _orientation);
+  _oldPosition = _position;
+  _seed = glm::linearRand(0.f, 1.f);
 }
 
 Duck::~Duck() { _handler->remove(_entity); }
@@ -43,7 +46,16 @@ void Duck::update(float ts_ms) {
 }
 
 void Duck::positionUpdate() {
+  glm::vec3 dx = _position - _oldPosition;
+  float yaw = glm::atan(dx.x, dx.z);
+  float pitch = -glm::atan(dx.y, glm::length(glm::vec2({dx.z, dx.x})));
+
+  auto matRot = glm::rotate(yaw, glm::vec3({0, 1, 0})) *
+                glm::rotate(pitch, glm::vec3({1, 0, 0}));
+
+  _orientation = glm::quat(matRot);
   _handler->moveAndRotate(_entity, _position, _orientation);
+  _oldPosition = _position;
 }
 
 void Duck::circleState() {
@@ -53,13 +65,25 @@ void Duck::circleState() {
   circPos = mat * circPos;
   _orientation = glm::quat(mat) * _orientation;
   _position = glm::vec3(circPos) + _circlePoint;
-  _position.y += 0.005f * glm::sin(_aliveTime * 0.008f + 1.f);
+  _position.y += 0.01f * glm::sin(_aliveTime * 0.008f + _seed);
 
-  if (getPlayerDistance() < DUCK_AGRO_DISTANCE && false) // disable for debug
+  if (getPlayerDistance() < DUCK_AGRO_DISTANCE)
     _state = State::ATTACK;
 }
 
-void Duck::attackState() {}
+void Duck::attackState() {
+  auto step = glm::normalize(_player->getPlayerCameraPosition() - _position);
+
+  step *= 2.f * 0.001f * _ts_ms;
+  glm::vec3 perp({step.z, 0.f, -step.x});
+  if (getPlayerDistance() > 1.f) {
+    _position += step;
+    _position.y += 0.01f * glm::sin(_aliveTime * 0.008f + _seed);
+    _position += 0.3f * glm::sin(_aliveTime * 0.005f + _seed) * perp;
+
+  } else
+    _position += 0.001f * step;
+}
 void Duck::dyingState() {}
 void Duck::deadState() {}
 

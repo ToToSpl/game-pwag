@@ -36,5 +36,5 @@
   { 20, 10, 0 }
 #define DUCK_CIRCLE_VEC                                                        \
   { 2, 0, 0 }
-#define DUCK_AGRO_DISTANCE 20.f
+#define DUCK_AGRO_DISTANCE 15.f
 #define DUCK_ATTACK_DISTANCE 1.0f

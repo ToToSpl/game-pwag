@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
   std::vector<Duck*> ducks;
   GameObject duck_handler(scene, BUILD_TO_ROOT + DUCK_PATH);
   {
-    constexpr u_int32_t duck_amount = 20;
+    constexpr u_int32_t duck_amount = 10;
     for (int i = 0; i < duck_amount; i++) {
       ducks.push_back(new Duck(&duck_handler, &player));
     }
