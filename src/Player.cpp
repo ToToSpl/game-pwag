@@ -12,8 +12,9 @@ Player::Player(glm::vec3 startPos, double horAngle, double vertAngle,
   int w, h;
   glfwGetWindowSize(_window, &w, &h);
   _camera = new Camera(_window, w, h, true);
-  _speed = {0.0f, 0.0f, 0.0f};
-  _cutDir = {0, 0};
+  _speed = {0.f, 0.f, 0.f};
+  _cutDir = {0.f, 0.f, 0.f};
+  _rotMat2 = glm::rotate(0.785f, glm::vec3({0, 1, 0}));
 }
 
 Player::~Player() { delete _camera; }
@@ -30,13 +31,14 @@ void Player::update(float ts) {
   double centerX = glm::ceil(scrnSize.first / 2.0f);
   double centerY = glm::ceil(scrnSize.second / 2.0f);
 
-  glfwSetCursorPos(_window, centerX, centerY);
+  if (!_mousePressed)
+    glfwSetCursorPos(_window, centerX, centerY);
 
   if (!_mousePressed) {
     _horAng += MOUSE_SPEED * ts * (centerX - xpos);
     _vertAng += MOUSE_SPEED * ts * (centerY - ypos);
   } else {
-    glm::vec2 dir({centerX - xpos, centerY - ypos});
+    glm::vec3 dir({centerX - xpos, centerY - ypos, 0});
     if (dir.x != 0 && dir.y != 0)
       _cutDir = dir;
   }
@@ -82,13 +84,17 @@ void Player::update(float ts) {
     _mousePressedFrame++;
   } else if (_mousePressed) {
     if (_cutDir.x != 0 && _cutDir.y != 0) {
-      _cutDir = glm::normalize(_cutDir);
-      // do stuff with cutDir
+      _animationRate = 1.0f;
+      auto m1 = glm::rotate(45.0f, glm::vec3({1, 0, 0}));
+      float angle = glm::atan(_cutDir.x, -_cutDir.y);
+      auto m2 = glm::rotate(angle, glm::vec3({0, 1, 0}));
+      _rotMat1 = m1 * m2;
+      _cutDir = glm::vec3(0);
     }
 
     _mousePressed = false;
     _mousePressedFrame = 0;
-    _cutDir = glm::vec2({0, 0});
+    glfwSetCursorPos(_window, centerX, centerY);
   }
 
   if (glm::length(acc) != 0.0f)
@@ -112,14 +118,18 @@ void Player::update(float ts) {
 
 void Player::placeKatana(float ts_ms) {
   glm::vec3 offset(KATANA_POS_REL);
+  glm::mat4 rot(1);
   if (_mousePressed) {
     float step = _mousePressedFrame * 0.002;
     offset.y += step > 0.05f ? 0.05f : step;
+  } else if (_animationRate > 0.f) {
+    float angle = glm::radians(30.f - _animationRate * 60.f);
+    rot = _rotMat1 * glm::rotate(angle, glm::vec3({1, 0, 0})) * _rotMat2;
 
+    _animationRate -= 0.003 * ts_ms;
   } else {
     offset.y += 0.01f * sin(_gameTime * 0.0015);
   }
-  glm::mat4 rot = glm::rotate(0.0f, glm::vec3({0, 0, 1}));
   _katanaObj->attachTo(_katanaEnt, _position + glm::vec3(CAMERA_POS_REL),
                        _direction, offset, rot);
 }

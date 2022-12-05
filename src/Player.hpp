@@ -11,9 +11,11 @@ class Player {
 private:
   Camera* _camera;
   glm::vec3 _position, _up, _right, _direction, _speed;
-  glm::vec2 _cutDir;
+  glm::vec3 _cutDir;
   GLFWwindow* _window;
   float _gameTime = 0.f;
+  float _animationRate = 0.f;
+  glm::mat4 _rotMat1, _rotMat2;
   double _horAng, _vertAng;
   bool _enabled = false;
   bool _wireframe = false, _wireframePressed = false;
