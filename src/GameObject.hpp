@@ -26,6 +26,7 @@ public:
   void translate(GameEntity* ent, glm::vec3 vec);
   void moveTo(GameEntity* ent, glm::vec3 vec);
   void rotate(GameEntity* ent, glm::quat rot);
+  void moveAndRotate(GameEntity* ent, glm::vec3 vec, glm::quat rot);
   void attachTo(GameEntity* ent, glm::vec3 pos, glm::vec3 dir, glm::vec3 offset,
                 glm::mat4 init_rot);
   void kill(GameEntity* ent);

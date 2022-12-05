@@ -31,3 +31,10 @@
 #define SLOW_MO_MULT 0.3f
 #define FRAME_RATE 45.0f
 #define FRAME_TIME_MS (1000.f / FRAME_RATE)
+
+#define DUCK_START_POSITION                                                    \
+  { 20, 10, 0 }
+#define DUCK_CIRCLE_VEC                                                        \
+  { 2, 0, 0 }
+#define DUCK_AGRO_DISTANCE 20.f
+#define DUCK_ATTACK_DISTANCE 1.0f

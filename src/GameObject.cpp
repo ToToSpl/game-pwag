@@ -71,6 +71,15 @@ void GameObject::rotate(GameEntity* ent, glm::quat rot) {
   }
 }
 
+void GameObject::moveAndRotate(GameEntity* ent, glm::vec3 vec, glm::quat rot) {
+  glm::mat4 mat1 = glm::translate(glm::mat4(1), vec) * glm::toMat4(rot);
+  for (u_int32_t i = 0; i < ent->objects.size(); i++) {
+    auto obj = ent->objects[i].second;
+    obj->transform = mat1;
+    obj->moved = true;
+  }
+}
+
 void GameObject::attachTo(GameEntity* ent, glm::vec3 pos, glm::vec3 dir,
                           glm::vec3 offset, glm::mat4 init_rot) {
 

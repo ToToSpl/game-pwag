@@ -1,3 +1,4 @@
+#include "Duck.hpp"
 #include "GameObject.hpp"
 #include "Player.hpp"
 #include "Renderer.hpp"
@@ -21,20 +22,27 @@ int main(int argc, char** argv) {
   Player player = Player({-1, 0, 0}, 0, 0, renderer.getWindow());
   renderer.bindPlayer(&player);
 
-  GameObject duck(scene, BUILD_TO_ROOT + DUCK_PATH);
-  // duck.spawn({0, 1, 0}, {1, 0, 0, 0});
-  // duck.spawn({0, 2.5, 0}, {0, 0, 0, 1});
-  u_int32_t box_side = 4;
-  std::vector<GameEntity*> ducks;
-  for (u_int32_t i = 0; i < box_side; i++) {
-    for (u_int32_t j = 0; j < box_side; j++) {
-      for (u_int32_t k = 0; k < box_side; k++) {
-        ducks.push_back(duck.spawn({i, j + 1.f, k}, {1, 0, 0, 0}));
-      }
+  std::vector<Duck*> ducks;
+  GameObject duck_handler(scene, BUILD_TO_ROOT + DUCK_PATH);
+  {
+    constexpr u_int32_t duck_amount = 20;
+    for (int i = 0; i < duck_amount; i++) {
+      ducks.push_back(new Duck(&duck_handler, &player));
     }
   }
 
-  duck.kill(ducks[0]);
+  // duck.spawn({0, 1, 0}, {1, 0, 0, 0});
+  // duck.spawn({0, 2.5, 0}, {0, 0, 0, 1});
+  // u_int32_t box_side = 4;
+  // std::vector<GameEntity*> ducks;
+  // for (u_int32_t i = 0; i < box_side; i++) {
+  //   for (u_int32_t j = 0; j < box_side; j++) {
+  //     for (u_int32_t k = 0; k < box_side; k++) {
+  //       ducks.push_back(duck.spawn({i, j + 1.f, k}, {1, 0, 0, 0}));
+  //     }
+  //   }
+  // }
+  // duck.kill(ducks[0]);
 
   GameObject floor(scene, BUILD_TO_ROOT + FLOOR_PATH);
   floor.spawn({0, 0, 0}, {1, 0, 0, 0});
@@ -48,6 +56,9 @@ int main(int argc, char** argv) {
     fps_logger(lastFrame);
     if (player.getMousePressed())
       lastFrame *= SLOW_MO_MULT;
+
+    for (auto& d : ducks)
+      d->update(lastFrame);
 
     renderer.renderFrame(lastFrame);
 
