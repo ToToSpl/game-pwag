@@ -26,23 +26,9 @@ int main(int argc, char** argv) {
   GameObject duck_handler(scene, BUILD_TO_ROOT + DUCK_PATH);
   {
     constexpr u_int32_t duck_amount = 10;
-    for (int i = 0; i < duck_amount; i++) {
+    for (int i = 0; i < duck_amount; i++)
       ducks.push_back(new Duck(&duck_handler, &player));
-    }
   }
-
-  // duck.spawn({0, 1, 0}, {1, 0, 0, 0});
-  // duck.spawn({0, 2.5, 0}, {0, 0, 0, 1});
-  // u_int32_t box_side = 4;
-  // std::vector<GameEntity*> ducks;
-  // for (u_int32_t i = 0; i < box_side; i++) {
-  //   for (u_int32_t j = 0; j < box_side; j++) {
-  //     for (u_int32_t k = 0; k < box_side; k++) {
-  //       ducks.push_back(duck.spawn({i, j + 1.f, k}, {1, 0, 0, 0}));
-  //     }
-  //   }
-  // }
-  // duck.kill(ducks[0]);
 
   GameObject floor(scene, BUILD_TO_ROOT + FLOOR_PATH);
   floor.spawn({0, 0, 0}, {1, 0, 0, 0});
@@ -57,8 +43,19 @@ int main(int argc, char** argv) {
     if (player.getMousePressed())
       lastFrame *= SLOW_MO_MULT;
 
-    for (auto& d : ducks)
-      d->update(lastFrame);
+    {
+      int duck_removed = -1; // support to one deletion per frame
+      for (int i = 0; i < ducks.size(); i++) {
+        ducks[i]->update(lastFrame);
+        if (ducks[i]->shouldRemove())
+          duck_removed = i;
+      }
+      if (duck_removed >= 0) {
+        delete ducks[duck_removed];
+        ducks[duck_removed] = new Duck(&duck_handler, &player);
+        // ducks.erase(ducks.begin() + duck_removed);
+      }
+    }
 
     renderer.renderFrame(lastFrame);
 

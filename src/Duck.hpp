@@ -6,16 +6,16 @@
 namespace Game {
 class Duck {
 private:
-  enum State { CIRCLING, DYING, DEAD, ATTACK };
+  enum State { CIRCLING, DYING, DEAD, ATTACK, REMOVED };
 
   GameObject* _handler;
   GameEntity* _entity;
   float _aliveTime = 0.f, _ts_ms;
-  float _seed = 0.f;
+  float _seed = 0.f, _dyingStart = 0.f;
   State _state = State::CIRCLING;
   Player* _player;
   glm::vec3 _position, _oldPosition, _circlePoint;
-  glm::quat _orientation;
+  glm::quat _orientation, _deathRoll;
 
 private:
   float getPlayerDistance();

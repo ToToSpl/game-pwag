@@ -47,8 +47,8 @@ void Player::update(float ts) {
   else if (_vertAng > 1.57)
     _vertAng = 1.57;
 
-  _direction = {cos(_vertAng) * sin(_horAng), sin(_vertAng),
-                cos(_vertAng) * cos(_horAng)};
+  _direction = glm::vec3({cos(_vertAng) * sin(_horAng), sin(_vertAng),
+                          cos(_vertAng) * cos(_horAng)});
 
   _right =
       glm::vec3(sin(_horAng - 3.14f / 2.0f), 0, cos(_horAng - 3.14f / 2.0f));

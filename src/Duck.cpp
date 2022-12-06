@@ -19,9 +19,10 @@ Duck::Duck(GameObject* handler, Player* player)
   _entity = _handler->spawn(_position, _orientation);
   _oldPosition = _position;
   _seed = glm::linearRand(0.f, 1.f);
+  _deathRoll = glm::quat({1, 0, 0, 0});
 }
 
-Duck::~Duck() { _handler->remove(_entity); }
+Duck::~Duck() {}
 
 void Duck::update(float ts_ms) {
   _ts_ms = ts_ms;
@@ -39,7 +40,9 @@ void Duck::update(float ts_ms) {
     break;
   case DEAD:
     deadState();
-    break;
+    return;
+  case REMOVED:
+    return;
   }
 
   positionUpdate();
@@ -53,7 +56,7 @@ void Duck::positionUpdate() {
   auto matRot = glm::rotate(yaw, glm::vec3({0, 1, 0})) *
                 glm::rotate(pitch, glm::vec3({1, 0, 0}));
 
-  _orientation = glm::quat(matRot);
+  _orientation = glm::quat(matRot) * _deathRoll;
   _handler->moveAndRotate(_entity, _position, _orientation);
   _oldPosition = _position;
 }
@@ -83,11 +86,27 @@ void Duck::attackState() {
 
   } else
     _position += 0.001f * step;
-}
-void Duck::dyingState() {}
-void Duck::deadState() {}
 
-bool Duck::shouldRemove() { return _state == State::DEAD; }
+  if (getPlayerDistance() < DUCK_ATTACK_DISTANCE)
+    _state = State::DYING;
+}
+void Duck::dyingState() {
+  if (_dyingStart == 0.f) {
+    _dyingStart = _aliveTime;
+    _handler->kill(_entity);
+  }
+  float dt = 0.001f * (_aliveTime - _dyingStart);
+  float roll = 1.57f * dt;
+  _deathRoll = glm::quat(glm::rotate(roll, glm::vec3({0, 0, 1})));
+  if (dt >= 1.0f)
+    _state = State::DEAD;
+}
+void Duck::deadState() {
+  _handler->remove(_entity);
+  _state = State::REMOVED;
+}
+
+bool Duck::shouldRemove() { return _state == State::REMOVED; }
 
 float Duck::getPlayerDistance() {
   glm::vec3 dist = _player->getPlayerCameraPosition() - _position;
