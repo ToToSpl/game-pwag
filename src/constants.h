@@ -20,6 +20,8 @@
 #define PLAYER_ACC 0.00001f
 #define PLAYER_DRAG 0.98989397941f
 #define PLAYER_JUMP 0.01f
+#define PLAYER_ATTACK_RANGE 2.5f
+#define PLAYER_ATTACK_ACC 0.7f
 #define MOUSE_SPEED 0.001f
 #define CAMERA_POS_REL                                                         \
   { 0.f, 1.8f, 0.f }
@@ -38,3 +40,5 @@
   { 2, 0, 0 }
 #define DUCK_AGRO_DISTANCE 15.f
 #define DUCK_ATTACK_DISTANCE 1.0f
+#define DUCK_ATTACK_STRENGHT 10.f
+#define DUCK_COOLDOWN_TIME 1.f

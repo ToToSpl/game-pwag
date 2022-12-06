@@ -27,6 +27,8 @@ Duck::~Duck() {}
 void Duck::update(float ts_ms) {
   _ts_ms = ts_ms;
   _aliveTime += _ts_ms;
+  if (_cooldown > 0.f)
+    _cooldown -= 0.001f * _ts_ms;
 
   switch (_state) {
   case CIRCLING:
@@ -87,8 +89,18 @@ void Duck::attackState() {
   } else
     _position += 0.001f * step;
 
-  if (getPlayerDistance() < DUCK_ATTACK_DISTANCE)
-    _state = State::DYING;
+  float playerDist = getPlayerDistance();
+  if (playerDist < DUCK_ATTACK_DISTANCE) {
+    if (_cooldown <= 0.f) {
+      _player->hit();
+      _cooldown = DUCK_COOLDOWN_TIME;
+    }
+  }
+  if (playerDist < PLAYER_ATTACK_RANGE) {
+    bool hit = _player->checkHit(_position);
+    if (hit)
+      _state = State::DYING;
+  }
 }
 void Duck::dyingState() {
   if (_dyingStart == 0.f) {

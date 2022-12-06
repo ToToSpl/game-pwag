@@ -2,6 +2,7 @@
 
 #include "GameObject.hpp"
 #include "Player.hpp"
+#include "constants.h"
 
 namespace Game {
 class Duck {
@@ -11,7 +12,7 @@ private:
   GameObject* _handler;
   GameEntity* _entity;
   float _aliveTime = 0.f, _ts_ms;
-  float _seed = 0.f, _dyingStart = 0.f;
+  float _seed = 0.f, _dyingStart = 0.f, _cooldown = 0.f;
   State _state = State::CIRCLING;
   Player* _player;
   glm::vec3 _position, _oldPosition, _circlePoint;

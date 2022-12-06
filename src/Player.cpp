@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "constants.h"
+#include "glm/gtx/norm.hpp"
 #include <glm/gtx/transform.hpp>
 #include <iostream>
 
@@ -110,6 +111,8 @@ void Player::update(float ts) {
   if (_position.y != 0.f)
     _position.y = 0.f;
 
+  _attacking = _animationRate > 0.f;
+
   placeKatana(ts);
   _gameTime += ts;
 }
@@ -123,6 +126,7 @@ void Player::placeKatana(float ts_ms) {
   } else if (_animationRate > 0.f) {
     float angle = glm::radians(30.f - _animationRate * 60.f);
     rot = _rotMat1 * glm::rotate(angle, glm::vec3({1, 0, 0})) * _rotMat2;
+    _cutVec = glm::vec3(glm::vec4({0, 1, 0, 0}) * rot);
 
     _animationRate -= 0.003 * ts_ms;
   } else {
@@ -147,6 +151,23 @@ void Player::freezeLogic() {
   }
 }
 
+bool Player::checkHit(glm::vec3 pos) {
+  if (!_attacking)
+    return false;
+
+  auto katana_pos = _position + glm::vec3(CAMERA_POS_REL);
+  auto dir = pos - katana_pos;
+  if (glm::length(dir) > PLAYER_ATTACK_RANGE)
+    return false;
+
+  dir = glm::normalize(dir);
+  float cov = glm::dot(-dir, _cutVec);
+  if (cov < PLAYER_ATTACK_ACC)
+    return false;
+
+  return true;
+}
+
 glm::mat4 Player::getPlayerProjection() {
   return _camera->getProjection(_position + glm::vec3(CAMERA_POS_REL),
                                 _direction, _up);
@@ -161,6 +182,11 @@ glm::vec3 Player::getPlayerCameraPosition() {
 void Player::addKatana(GameObject& katana) {
   _katanaObj = &katana;
   _katanaEnt = katana.spawn({0, 0, 0}, {1, 0, 0, 0});
+}
+
+void Player::hit() {
+  _health -= DUCK_ATTACK_STRENGHT;
+  std::cout << "HEALTH:\t" << _health << std::endl;
 }
 
 } // namespace Game
