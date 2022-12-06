@@ -161,7 +161,7 @@ bool Player::checkHit(glm::vec3 pos) {
     return false;
 
   dir = glm::normalize(dir);
-  float cov = glm::dot(-dir, _cutVec);
+  float cov = fabs(glm::dot(dir, _cutVec));
   if (cov < PLAYER_ATTACK_ACC)
     return false;
 
