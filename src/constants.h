@@ -22,6 +22,8 @@
 #define PLAYER_JUMP 0.01f
 #define PLAYER_ATTACK_RANGE 2.5f
 #define PLAYER_ATTACK_ACC 0.7f
+#define PLAYER_HEALTH_COOLDOWN 3.f
+#define PLAYER_HEALTH_INCREASE 5.f
 #define MOUSE_SPEED 0.001f
 #define CAMERA_POS_REL                                                         \
   { 0.f, 1.8f, 0.f }

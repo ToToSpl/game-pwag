@@ -1,6 +1,7 @@
 #include "Player.hpp"
 #include "constants.h"
 #include "glm/gtx/norm.hpp"
+#include <algorithm>
 #include <glm/gtx/transform.hpp>
 #include <iostream>
 
@@ -24,6 +25,16 @@ void Player::update(float ts) {
   freezeLogic();
   if (!_enabled)
     return;
+
+  if (_health < 100.f) {
+    if (_healthCooldown > PLAYER_HEALTH_COOLDOWN) {
+      _healthCooldown = 0.f;
+      _health = std::min(100.f, _health + PLAYER_HEALTH_INCREASE);
+      std::cout << "HEALTH:\t" << _health << std::endl;
+    } else {
+      _healthCooldown += 0.001f * ts;
+    }
+  }
 
   double xpos, ypos;
   glfwGetCursorPos(_window, &xpos, &ypos);
