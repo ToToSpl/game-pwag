@@ -2,7 +2,7 @@
 in vec2 UV;
 in vec3 norm;
 in vec3 FragPos;
-out vec3 color;
+out vec4 color;
 
 uniform sampler2D myTextureSampler;
 uniform vec3 V;
@@ -26,9 +26,9 @@ void main(){
 
     vec3 lighting = (ambientStrenght + diff + spec) * lightColor;
    
-    color = lighting * objectColor;
+    color = vec4(lighting * objectColor, 1);
   } else {
-    color = ambientStrenght * lightColor * objectColor;
+    color = vec4(ambientStrenght * lightColor * objectColor, 0.5);
     color.r += 0.5;
   }
 }
