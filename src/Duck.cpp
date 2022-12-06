@@ -79,7 +79,7 @@ void Duck::circleState() {
 void Duck::attackState() {
   auto step = glm::normalize(_player->getPlayerCameraPosition() - _position);
 
-  step *= 2.f * 0.001f * _ts_ms;
+  step *= DUCK_SPEED * 0.001f * _ts_ms;
   glm::vec3 perp({step.z, 0.f, -step.x});
   if (getPlayerDistance() > 1.f) {
     _position += step;

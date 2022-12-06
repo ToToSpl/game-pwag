@@ -30,7 +30,10 @@ private:
   GLuint _VertexArrayID;
   GLuint _currentProgID;
   bool _running = false;
+  float _timeElapsed = 0.f;
   GLuint _cameraID, _transformationID, _normalMatID, _cameraPosID, _aliveID;
+  GLuint _healthID, _tsID;
+  GLuint _postEffectVertArr, _postEffectIndArr;
 
   Scene& _scene;
   Player* _player;
@@ -39,6 +42,7 @@ private:
 private:
   ShaderProgram* _stdShaderProg;
   ShaderProgram* _wireframeProg;
+  ShaderProgram* _postEffectProg;
 
 public:
   Renderer(Scene& scene);

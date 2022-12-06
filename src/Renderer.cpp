@@ -15,6 +15,8 @@
 #define STD_SHADER_VERT BUILD_TO_ROOT + "shaders/basic.vert"
 #define WIREFRAME_SHADER_FRAG BUILD_TO_ROOT + "shaders/wireframe.frag"
 #define WIREFRAME_SHADER_VERT BUILD_TO_ROOT + "shaders/wireframe.vert"
+#define POSTEFFECT_SHADER_FRAG BUILD_TO_ROOT + "shaders/posteffect.frag"
+#define POSTEFFECT_SHADER_VERT BUILD_TO_ROOT + "shaders/posteffect.vert"
 static void GLClearError() {
   while (glGetError() != GL_NO_ERROR)
     ;
@@ -72,6 +74,8 @@ bool Renderer::init(std::string window_name) {
 
   _stdShaderProg = compileProgram(STD_SHADER_VERT, STD_SHADER_FRAG);
   _wireframeProg = compileProgram(WIREFRAME_SHADER_VERT, WIREFRAME_SHADER_FRAG);
+  _postEffectProg =
+      compileProgram(POSTEFFECT_SHADER_VERT, POSTEFFECT_SHADER_FRAG);
 
   _currentProgID = _stdShaderProg->programId;
   _cameraID = glGetUniformLocation(_stdShaderProg->programId, "MVP");
@@ -80,16 +84,36 @@ bool Renderer::init(std::string window_name) {
   _cameraPosID = glGetUniformLocation(_stdShaderProg->programId, "V");
   _aliveID = glGetUniformLocation(_stdShaderProg->programId, "alive");
 
+  _healthID = glGetUniformLocation(_postEffectProg->programId, "health");
+  _tsID = glGetUniformLocation(_postEffectProg->programId, "t_elapsed");
+
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
   glEnable(GL_CULL_FACE);
+
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  // create plane for posteffects
+  {
+    float vertecies[4 * 2] = {-1.f, 1.f, 1.f, 1.f, -1.f, -1.f, 1.f, -1.f};
+    glGenBuffers(1, &_postEffectVertArr);
+    glBindBuffer(GL_ARRAY_BUFFER, _postEffectVertArr);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4 * 2, vertecies,
+                 GL_STATIC_DRAW);
+
+    u_int16_t indecies[6] = {0, 2, 1, 2, 3, 1};
+    glGenBuffers(1, &_postEffectIndArr);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _postEffectIndArr);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u_int16_t) * 6, indecies,
+                 GL_STATIC_DRAW);
+  }
 
   return true;
 }
 
 float Renderer::renderFrame(float ts) {
+  _timeElapsed += ts;
   auto start = std::chrono::high_resolution_clock::now();
 
   _player->update(ts);
@@ -136,6 +160,19 @@ float Renderer::renderFrame(float ts) {
                                  _transformationID, _normalMatID, _cameraPosID,
                                  _aliveID);
     }
+  }
+
+  // post effects
+  {
+    glUseProgram(_postEffectProg->programId);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, _postEffectVertArr);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _postEffectIndArr);
+    glUniform1f(_healthID, _player->getHealth());
+    glUniform1f(_tsID, _timeElapsed);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, (void*)0);
+    glDisableVertexAttribArray(0);
   }
 
   /* Swap front and back buffers */
