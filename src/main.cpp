@@ -59,6 +59,11 @@ int main(int argc, char** argv) {
 
     renderer.renderFrame(lastFrame);
 
+    if (player.getHealth() < 0.f) {
+      std::cout << "\n----- YOU LOSE! -----" << std::endl;
+      return 0;
+    }
+
     auto renderEnd = std::chrono::high_resolution_clock::now();
     float renderTime =
         std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start)
