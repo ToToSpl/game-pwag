@@ -6,6 +6,7 @@
 #include "constants.h"
 
 #include <chrono>
+#include <glm/gtx/transform.hpp>
 #include <iostream>
 #include <ostream>
 #include <thread>
@@ -13,6 +14,8 @@
 inline void fps_logger(float dur);
 
 using namespace Game;
+
+inline void build_scene(GameObject& floor, GameObject& tree, GameObject& fence);
 
 int main(int argc, char** argv) {
   Scene scene = Scene();
@@ -31,13 +34,9 @@ int main(int argc, char** argv) {
   }
 
   GameObject floor(scene, BUILD_TO_ROOT + FLOOR_PATH);
-  floor.spawn({0, 0, 0}, {1, 0, 0, 0});
-
   GameObject fence(scene, BUILD_TO_ROOT + FENCE_PATH);
-  fence.spawn({0, 0, 0}, {1, 0, 0, 0});
-
   GameObject tree(scene, BUILD_TO_ROOT + TREE_PATH);
-  tree.spawn({0, 0, 0}, {1, 0, 0, 0});
+  build_scene(floor, tree, fence);
 
   GameObject lamp(scene, BUILD_TO_ROOT + LAMP_PATH);
   lamp.spawn({4, 0, 0}, {1, 0, 0, 0});
@@ -87,6 +86,29 @@ int main(int argc, char** argv) {
             .count();
   }
   return 0;
+}
+
+inline void build_scene(GameObject& floor, GameObject& tree,
+                        GameObject& fence) {
+
+  floor.spawn({0, 0, 0}, {1, 0, 0, 0});
+
+  float barrier = SCENE_SIZE - SCENE_OFFSET;
+  for (float i = -barrier; i < barrier; i += 4.f) {
+    fence.spawn({i + 3, 0.f, barrier}, {1, 0, 0, 0});
+    fence.spawn({i + 3, 0.f, -barrier}, {1, 0, 0, 0});
+    tree.spawn({i, 0.f, barrier + 4.f}, {1, 0, 0, 0});
+    tree.spawn({i, 0.f, -barrier - 4.f}, {1, 0, 0, 0});
+  }
+
+  glm::quat rot = glm::rotate(1.57f, glm::vec3({0, 1, 0}));
+
+  for (float i = -barrier; i < barrier; i += 4.f) {
+    fence.spawn({barrier, 0.f, i}, rot);
+    fence.spawn({-barrier, 0.f, i}, rot);
+    tree.spawn({barrier + 4.f, 0.f, i}, rot);
+    tree.spawn({-barrier - 4.f, 0.f, i}, rot);
+  }
 }
 
 inline void fps_logger(float dur) {
