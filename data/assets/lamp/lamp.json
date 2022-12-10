@@ -1,0 +1,15 @@
+{
+  "shape": [
+    {
+      "type": "obj",
+      "name": "lamp",
+      "special": "none",
+      "position": [0, 0, 0],
+      "scale": 1,
+      "source": "lamp.obj",
+      "texture": {
+        "source": "lamp.png"
+      }
+    }
+  ]
+}

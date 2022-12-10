@@ -7,6 +7,7 @@
 #define KATANA_PATH std::string("data/assets/katana/katana.json")
 #define FENCE_PATH std::string("data/assets/fence/fence.json")
 #define TREE_PATH std::string("data/assets/tree/tree.json")
+#define LAMP_PATH std::string("data/assets/lamp/lamp.json")
 
 #define CUBE_VERT 6 * 4 * 3
 #define CUBE_IND 6 * 4 * 3

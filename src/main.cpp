@@ -39,6 +39,9 @@ int main(int argc, char** argv) {
   GameObject tree(scene, BUILD_TO_ROOT + TREE_PATH);
   tree.spawn({0, 0, 0}, {1, 0, 0, 0});
 
+  GameObject lamp(scene, BUILD_TO_ROOT + LAMP_PATH);
+  lamp.spawn({4, 0, 0}, {1, 0, 0, 0});
+
   GameObject katana(scene, BUILD_TO_ROOT + KATANA_PATH);
   player.addKatana(katana);
 
