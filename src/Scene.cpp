@@ -213,7 +213,7 @@ u_int32_t Scene::addObjEntity(json& data, std::string configPath) {
       } else if (param == "vt") {
         iss >> x >> y;
         UVs.push_back(x);
-        UVs.push_back(y);
+        UVs.push_back(-y);
       } else if (param == "vn") {
         iss >> x >> y >> z;
         normals.push_back(x);
