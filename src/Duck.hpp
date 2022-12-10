@@ -21,7 +21,7 @@ private:
 private:
   float getPlayerDistance();
   void circleState();
-  void attackState();
+  void attackState(std::vector<Duck*>& otherDucks);
   void dyingState();
   void deadState();
   void positionUpdate();
@@ -31,8 +31,9 @@ public:
   ~Duck();
 
 public:
-  void update(float ts_ms);
+  void update(float ts_ms, std::vector<Duck*>& otherDucks);
   bool attacked();
   bool shouldRemove();
+  inline glm::vec3 getPosition() { return _position; };
 };
 } // namespace Game

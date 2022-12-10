@@ -48,6 +48,7 @@
 #define DUCK_ATTACK_DISTANCE 1.0f
 #define DUCK_ATTACK_STRENGHT 10.f
 #define DUCK_COOLDOWN_TIME 1.f
+#define DUCK_REPEL_FORCE 0.2f
 
 #define SCENE_SIZE 100.f / 2.f
 #define SCENE_OFFSET 10.f

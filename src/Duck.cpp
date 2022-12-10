@@ -18,13 +18,13 @@ Duck::Duck(GameObject* handler, Player* player)
   // _orientation = glm::angleAxis(pointAngle + 1.57f, glm::vec3({0, 1, 0}));
   _entity = _handler->spawn(_position, _orientation);
   _oldPosition = _position;
-  _seed = glm::linearRand(0.f, 1.f);
+  _seed = glm::linearRand(0.f, 3.14f);
   _deathRoll = glm::quat({1, 0, 0, 0});
 }
 
 Duck::~Duck() {}
 
-void Duck::update(float ts_ms) {
+void Duck::update(float ts_ms, std::vector<Duck*>& otherDucks) {
   _ts_ms = ts_ms;
   _aliveTime += _ts_ms;
   if (_cooldown > 0.f)
@@ -35,7 +35,7 @@ void Duck::update(float ts_ms) {
     circleState();
     break;
   case ATTACK:
-    attackState();
+    attackState(otherDucks);
     break;
   case DYING:
     dyingState();
@@ -76,8 +76,21 @@ void Duck::circleState() {
     _state = State::ATTACK;
 }
 
-void Duck::attackState() {
+void Duck::attackState(std::vector<Duck*>& otherDucks) {
   auto step = glm::normalize(_player->getPlayerCameraPosition() - _position);
+  // duck reppeling
+  {
+    for (int i = 0; i < otherDucks.size(); i++) {
+      if (otherDucks[i] == this)
+        continue;
+      auto force = otherDucks[i]->getPosition() - _position;
+      float magnitude = glm::length(force);
+      force *= DUCK_REPEL_FORCE / glm::pow(magnitude, 2);
+      step.x -= force.x;
+      step.z -= force.z;
+    }
+    step = glm::normalize(step);
+  }
 
   step *= DUCK_SPEED * 0.001f * _ts_ms;
   glm::vec3 perp({step.z, 0.f, -step.x});
@@ -88,6 +101,9 @@ void Duck::attackState() {
 
   } else
     _position += 0.001f * step;
+
+  if (_position.y < 1.f)
+    _position.y = 1.f;
 
   float playerDist = getPlayerDistance();
   if (playerDist < DUCK_ATTACK_DISTANCE) {

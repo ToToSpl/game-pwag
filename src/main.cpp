@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
     {
       int duck_removed = -1; // support to one deletion per frame
       for (int i = 0; i < ducks.size(); i++) {
-        ducks[i]->update(lastFrame);
+        ducks[i]->update(lastFrame, ducks);
         if (ducks[i]->shouldRemove())
           duck_removed = i;
       }
