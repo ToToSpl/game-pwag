@@ -1,0 +1,15 @@
+{
+  "shape": [
+    {
+      "type": "obj",
+      "name": "fence",
+      "special": "none",
+      "position": [0, 0, 0],
+      "scale": 2.5,
+      "source": "fence.obj",
+      "texture": {
+        "source": "fence.png"
+      }
+    }
+  ]
+}
