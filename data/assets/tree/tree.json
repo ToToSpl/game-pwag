@@ -1,0 +1,15 @@
+{
+  "shape": [
+    {
+      "type": "obj",
+      "name": "tree",
+      "special": "none",
+      "position": [0, 0, 0],
+      "scale": 3,
+      "source": "tree.obj",
+      "texture": {
+        "source": "tree.png"
+      }
+    }
+  ]
+}
