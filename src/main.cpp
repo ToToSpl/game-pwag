@@ -11,11 +11,12 @@
 #include <ostream>
 #include <thread>
 
-inline void fps_logger(float dur);
-
 using namespace Game;
 
+inline void fps_logger(float dur);
 inline void build_scene(GameObject& floor, GameObject& tree, GameObject& fence);
+inline float sleep_fps(std::chrono::steady_clock::time_point& start,
+                       std::chrono::steady_clock::time_point& renderEnd);
 
 int main(int argc, char** argv) {
   Scene scene = Scene();
@@ -73,19 +74,23 @@ int main(int argc, char** argv) {
     }
 
     auto renderEnd = std::chrono::high_resolution_clock::now();
-    float renderTime =
-        std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start)
-            .count();
-    if (renderTime < FRAME_TIME_MS)
-      std::this_thread::sleep_for(
-          std::chrono::milliseconds((int)(FRAME_TIME_MS - renderTime)));
-
-    auto end = std::chrono::high_resolution_clock::now();
-    lastFrame =
-        std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
-            .count();
+    lastFrame = sleep_fps(start, renderEnd);
   }
   return 0;
+}
+
+inline float sleep_fps(std::chrono::steady_clock::time_point& start,
+                       std::chrono::steady_clock::time_point& renderEnd) {
+  float renderTime =
+      std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start)
+          .count();
+  if (renderTime < FRAME_TIME_MS)
+    std::this_thread::sleep_for(
+        std::chrono::milliseconds((int)(FRAME_TIME_MS - renderTime)));
+
+  auto end = std::chrono::high_resolution_clock::now();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
+      .count();
 }
 
 inline void build_scene(GameObject& floor, GameObject& tree,
@@ -106,8 +111,8 @@ inline void build_scene(GameObject& floor, GameObject& tree,
   for (float i = -barrier; i < barrier; i += 4.f) {
     fence.spawn({barrier, 0.f, i}, rot);
     fence.spawn({-barrier, 0.f, i}, rot);
-    tree.spawn({barrier + 4.f, 0.f, i}, rot);
-    tree.spawn({-barrier - 4.f, 0.f, i}, rot);
+    tree.spawn({barrier + 4.f, 0.f, i}, {1, 0, 0, 0});
+    tree.spawn({-barrier - 4.f, 0.f, i}, {1, 0, 0, 0});
   }
 }
 
