@@ -118,6 +118,19 @@ void Player::update(float ts) {
     _speed = glm::normalize(_speed) * PLAYER_SPEED;
   _position += _speed * ts;
 
+  // clip to scene
+  {
+    float barrier = SCENE_SIZE - SCENE_OFFSET - 1.f;
+    if (_position.x > barrier)
+      _position.x = barrier;
+    if (_position.x < -barrier)
+      _position.x = -barrier;
+    if (_position.z > barrier)
+      _position.z = barrier;
+    if (_position.z < -barrier)
+      _position.z = -barrier;
+  }
+
   // clip player to ground
   if (_position.y != 0.f)
     _position.y = 0.f;
