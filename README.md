@@ -30,7 +30,6 @@ See [here](https://stackoverflow.com/questions/67373307/macos-m1-fatal-error-glf
 - [x] Ładowanie zewnętrznych, teksturowanych obiektów
 - [x] Stworzenie shaderów pokazujących obrażenia zadawane postaci przez wrogów
 - [x] Animacje ruchu przeciwników
-- [ ] Implementacja fizyki członków przeciwników (walic to)
 - [x] Oświetlenie zgodne z modelem Phonga, punktowe źródła światła, zastosowanie dynamicznego oświetlania, bez uwzględnienia cieni
-- [ ] Oświetlenie definiowane w kodzie (nie w shaderze)
-- [ ] Ładna scena
+- [x] Oświetlenie definiowane w kodzie (nie w shaderze)
+- [x] Ładna scena (powiedzmy)
