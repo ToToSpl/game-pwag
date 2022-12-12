@@ -34,6 +34,8 @@ private:
   GLuint _cameraID, _transformationID, _normalMatID, _cameraPosID, _aliveID;
   GLuint _healthID, _tsID;
   GLuint _postEffectVertArr, _postEffectIndArr;
+  GLuint _lightDirID, _lightPointID;
+  glm::vec3 _lightDir, _lightPoint;
 
   Scene& _scene;
   Player* _player;
@@ -48,6 +50,9 @@ public:
   Renderer(Scene& scene);
   ~Renderer();
 
+private:
+  void setupLight();
+
 public:
   inline GLFWwindow* getWindow() { return _window; };
   inline void bindPlayer(Player* player) { _player = player; };
@@ -57,5 +62,7 @@ public:
   inline void bindScene(Scene& scene) { _scene = scene; };
   inline bool shouldRun() { return !glfwWindowShouldClose(_window); };
   float renderFrame(float ts);
+  void addDirectionalLight(glm::vec3 dir, float brightness);
+  void addPointLight(glm::vec3 point);
 };
 } // namespace Game

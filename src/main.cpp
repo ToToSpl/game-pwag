@@ -22,6 +22,8 @@ int main(int argc, char** argv) {
   Scene scene = Scene();
   Renderer renderer = Renderer(scene);
   renderer.init("Zombie Duck Hunt");
+  renderer.addDirectionalLight({1, 1, 1}, 0.2);
+  renderer.addPointLight({3.5, 3, 2});
 
   Player player = Player({-1, 0, 0}, 0, 0, renderer.getWindow());
   renderer.bindPlayer(&player);

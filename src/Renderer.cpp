@@ -84,6 +84,9 @@ bool Renderer::init(std::string window_name) {
   _cameraPosID = glGetUniformLocation(_stdShaderProg->programId, "V");
   _aliveID = glGetUniformLocation(_stdShaderProg->programId, "alive");
 
+  _lightDirID = glGetUniformLocation(_stdShaderProg->programId, "lightDir");
+  _lightPointID = glGetUniformLocation(_stdShaderProg->programId, "lightPoint");
+
   _healthID = glGetUniformLocation(_postEffectProg->programId, "health");
   _tsID = glGetUniformLocation(_postEffectProg->programId, "t_elapsed");
 
@@ -112,6 +115,18 @@ bool Renderer::init(std::string window_name) {
   return true;
 }
 
+void Renderer::addDirectionalLight(glm::vec3 dir, float brightness) {
+  auto d = glm::normalize(dir) * brightness;
+  _lightDir = d;
+}
+
+void Renderer::addPointLight(glm::vec3 point) { _lightPoint = point; }
+
+void Renderer::setupLight() {
+  glUniform3fv(_lightDirID, 1, &_lightDir[0]);
+  glUniform3fv(_lightPointID, 1, &_lightPoint[0]);
+}
+
 float Renderer::renderFrame(float ts) {
   _timeElapsed += ts;
   auto start = std::chrono::high_resolution_clock::now();
@@ -137,6 +152,8 @@ float Renderer::renderFrame(float ts) {
     }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    setupLight();
 
     std::vector<BasicEntity>* ents = _scene.getEntities();
     for (u_int32_t i = 0; i < ents->size(); i++) {
