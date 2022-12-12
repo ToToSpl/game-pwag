@@ -10,6 +10,22 @@
       "texture": {
         "source": "lamp.png"
       }
+    },
+    {
+      "type": "box",
+      "name": "light",
+      "special": "none",
+      "position": [0, 7.5, 1.65],
+      "dimension": [0.1, 0.1, 0.3],
+      "texture": {
+        "source": "light.png",
+        "top": [0, 0, 1, 1],
+        "bottom": [0, 0, 1, 1],
+        "left": [0, 0, 1, 1],
+        "right": [0, 0, 1, 1],
+        "front": [0, 0, 1, 1],
+        "back": [0, 0, 1, 1]
+      }
     }
   ]
 }
