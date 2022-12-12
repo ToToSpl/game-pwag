@@ -66,7 +66,7 @@ void Duck::positionUpdate() {
 void Duck::circleState() {
 
   auto circPos = glm::vec4(_position - _circlePoint, 0);
-  auto mat = glm::rotate(3.14f * 0.001f * _ts_ms, glm::vec3({0, 1, 0}));
+  auto mat = glm::rotate(3.14f * 0.00075f * _ts_ms, glm::vec3({0, 1, 0}));
   circPos = mat * circPos;
   _orientation = glm::quat(mat) * _orientation;
   _position = glm::vec3(circPos) + _circlePoint;
