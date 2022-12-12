@@ -30,12 +30,16 @@ private:
   GLuint _VertexArrayID;
   GLuint _currentProgID;
   bool _running = false;
-  float _timeElapsed = 0.f;
+  double _timeElapsed = 0.f;
   GLuint _cameraID, _transformationID, _normalMatID, _cameraPosID, _aliveID;
   GLuint _healthID, _tsID;
   GLuint _postEffectVertArr, _postEffectIndArr;
-  GLuint _lightDirID, _lightPointID;
+  GLuint _lightDirID, _lightPointID, _lightPointMultID;
   glm::vec3 _lightDir, _lightPoint;
+  float _lightPointMult;
+  double _lightLastBlink = 0.f;
+  unsigned int _lightPatternCurrent = 0;
+  std::string _lightPattern;
 
   Scene& _scene;
   Player* _player;
@@ -63,6 +67,6 @@ public:
   inline bool shouldRun() { return !glfwWindowShouldClose(_window); };
   float renderFrame(float ts);
   void addDirectionalLight(glm::vec3 dir, float brightness);
-  void addPointLight(glm::vec3 point);
+  void addPointLight(glm::vec3 point, std::string pattern);
 };
 } // namespace Game

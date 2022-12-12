@@ -86,6 +86,8 @@ bool Renderer::init(std::string window_name) {
 
   _lightDirID = glGetUniformLocation(_stdShaderProg->programId, "lightDir");
   _lightPointID = glGetUniformLocation(_stdShaderProg->programId, "lightPoint");
+  _lightPointMultID =
+      glGetUniformLocation(_stdShaderProg->programId, "lightPointMult");
 
   _healthID = glGetUniformLocation(_postEffectProg->programId, "health");
   _tsID = glGetUniformLocation(_postEffectProg->programId, "t_elapsed");
@@ -120,11 +122,25 @@ void Renderer::addDirectionalLight(glm::vec3 dir, float brightness) {
   _lightDir = d;
 }
 
-void Renderer::addPointLight(glm::vec3 point) { _lightPoint = point; }
+void Renderer::addPointLight(glm::vec3 point, std::string pattern) {
+  _lightPoint = point;
+  _lightPattern = pattern;
+}
 
 void Renderer::setupLight() {
   glUniform3fv(_lightDirID, 1, &_lightDir[0]);
   glUniform3fv(_lightPointID, 1, &_lightPoint[0]);
+  // calculate pattern brightness
+  if (_timeElapsed - _lightLastBlink >= 1000.0f * (1.0f / LIGHT_BLINK_FPS)) {
+    _lightLastBlink = _timeElapsed;
+    _lightPatternCurrent++;
+    if (_lightPatternCurrent >= _lightPattern.length())
+      _lightPatternCurrent = 0;
+
+    _lightPointMult =
+        0.8f * 0.076923f * (float)(_lightPattern[_lightPatternCurrent] - 'a');
+  }
+  glUniform1f(_lightPointMultID, _lightPointMult);
 }
 
 float Renderer::renderFrame(float ts) {

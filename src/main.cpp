@@ -23,7 +23,11 @@ int main(int argc, char** argv) {
   Renderer renderer = Renderer(scene);
   renderer.init("Zombie Duck Hunt");
   renderer.addDirectionalLight({1, 1, 1}, 0.2);
-  renderer.addPointLight({3.5, 3, 2});
+  // classic half life blinking
+  renderer.addPointLight({3.5, 1, 2}, "mmamammmmammamamaaamammma");
+  // other light effects
+  // renderer.addPointLight({3.5, 1, 2}, "jklmnopqrstuvwxyzyxwvutsrqponmlkj");
+  // renderer.addPointLight({3.5, 1, 2}, "nmonqnmomnmomomno");
 
   Player player = Player({-1, 0, 0}, 0, 0, renderer.getWindow());
   renderer.bindPlayer(&player);
@@ -42,7 +46,7 @@ int main(int argc, char** argv) {
   build_scene(floor, tree, fence);
 
   GameObject lamp(scene, BUILD_TO_ROOT + LAMP_PATH);
-  lamp.spawn({4, 0, 0}, {1, 0, 0, 0});
+  lamp.spawn({4, -2, 0}, {1, 0, 0, 0});
 
   GameObject katana(scene, BUILD_TO_ROOT + KATANA_PATH);
   player.addKatana(katana);

@@ -52,3 +52,5 @@
 
 #define SCENE_SIZE 100.f / 2.f
 #define SCENE_OFFSET 10.f
+
+#define LIGHT_BLINK_FPS 10.0f

@@ -9,6 +9,7 @@ uniform vec3 V;
 uniform int alive;
 uniform vec3 lightDir;
 uniform vec3 lightPoint;
+uniform float lightPointMult;
 
 float specularStrength = 0.9;
 float ambientStrenght = 0.6;
@@ -35,10 +36,10 @@ vec3 calcPointLight() {
   lightDirection = normalize(lightDirection);
   vec3 reflectDir = reflect(-lightDirection, norm);
 
-  float spec = specularStrength * pow(max(dot(viewDir, reflectDir), 0.0), 64);
-  float attentuation = 1.0 / (0.01 * lightLength * lightLength + 0.3 * lightLength + 0.1);
+  float spec = specularStrength * pow(max(dot(viewDir, reflectDir), 0.0), 16);
+  float attentuation = 1.0 / (0.01 * lightLength * lightLength + 0.1 * lightLength + 0.1);
 
-  return (ambientStrenght + diff + spec) * attentuation  * lightPointColor;
+  return lightPointMult * (ambientStrenght + diff + spec) * attentuation  * lightPointColor;
 }
 
 void main(){
