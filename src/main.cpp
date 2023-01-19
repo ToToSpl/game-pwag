@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
   renderer.addDirectionalLight({1, 1, 1}, 0.2);
   // classic half life blinking
   renderer.addPointLight({3.5, 1, 2}, "mmamammmmammamamaaamammma");
+  // renderer.addPointLight({3.5, 1, 2}, "m");
   // other light effects
   // renderer.addPointLight({3.5, 1, 2}, "jklmnopqrstuvwxyzyxwvutsrqponmlkj");
   // renderer.addPointLight({3.5, 1, 2}, "nmonqnmomnmomomno");

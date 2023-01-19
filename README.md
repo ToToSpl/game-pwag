@@ -33,3 +33,4 @@ See [here](https://stackoverflow.com/questions/67373307/macos-m1-fatal-error-glf
 - [x] Oświetlenie zgodne z modelem Phonga, punktowe źródła światła, zastosowanie dynamicznego oświetlania, bez uwzględnienia cieni
 - [x] Oświetlenie definiowane w kodzie (nie w shaderze)
 - [x] Ładna scena (powiedzmy)
+- [ ] Blendowanie tekstur

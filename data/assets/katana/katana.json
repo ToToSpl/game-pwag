@@ -3,12 +3,13 @@
     {
       "type": "obj",
       "name": "katana",
-      "special": "none",
+      "special": "texblending",
       "position": [0, 0, 0],
       "scale": 0.2,
       "source": "katana.obj",
       "texture": {
-        "source": "katana.png"
+        "source": "katana.png",
+        "blending": "katana_blood.png"
       }
     }
   ]

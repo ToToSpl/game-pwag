@@ -271,6 +271,8 @@ u_int32_t Scene::addObjEntity(json& data, std::string configPath) {
     ent.special = EntitySpecial::FLAP;
   else if (data["special"] == "breathing")
     ent.special = EntitySpecial::BREATHE;
+  else if (data["special"] == "texblending")
+    ent.special = EntitySpecial::TEXBLENDING;
 
   glGenBuffers(1, &ent.vertArr);
   glBindBuffer(GL_ARRAY_BUFFER, ent.vertArr);
@@ -283,7 +285,8 @@ u_int32_t Scene::addObjEntity(json& data, std::string configPath) {
                ent.indecies, GL_STATIC_DRAW);
 
   textureCreateObj(&ent.texture, data["texture"], configPath, ordUVs, ordNorms,
-                   ordVert.size() / 3);
+                   ordVert.size() / 3,
+                   ent.special == EntitySpecial::TEXBLENDING);
 
   _basic_entities.push_back(ent);
   _basic_entity_dict[ent.name] = _basic_entity_index;
@@ -332,7 +335,8 @@ void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint camMatID,
 
   glUniform3fv(cameraPosID, 1, &camPos[0]);
 
-  if (ent.special == EntitySpecial::NONE) {
+  if (ent.special == EntitySpecial::NONE ||
+      ent.special == EntitySpecial::TEXBLENDING) {
     for (u_int32_t i = 0; i < ent.objects.size(); i++) {
       // set uniforms
       SceneObject* obj = ent.objects[i];

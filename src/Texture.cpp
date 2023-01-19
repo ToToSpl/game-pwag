@@ -7,19 +7,46 @@
 #include <string>
 
 namespace Game {
-void textureCreateBox(Texture* tex, json& data, std::string& configPath) {
-  // find texture path
-  std::string texFileName;
-  {
-    u_int32_t nameBegin = 0;
-    const char* str = configPath.c_str();
-    for (u_int32_t i = 0; i < configPath.length(); i++)
-      if (str[i] == '/')
-        nameBegin = i;
-    if (nameBegin > 0 && nameBegin < configPath.length() - 1)
-      nameBegin++;
-    texFileName = configPath.substr(0, nameBegin) + (std::string)data["source"];
+
+void loadTextureFromFile(std::string& filename, Texture* tex,
+                         u_int8_t** target) {
+  std::vector<u_int8_t> pngArr;
+  if (unsigned error =
+          lodepng::decode(pngArr, tex->width, tex->height, filename)) {
+    std::cout << "PNG decoder error " << error << ": "
+              << lodepng_error_text(error) << std::endl;
+    abort();
   }
+  // based on 4bit png convert to 3bit array
+  *target = (u_int8_t*)malloc(sizeof(u_int8_t) * 3 * tex->width * tex->height);
+  u_int32_t pngI = 0, arrI = 0;
+  while (pngI < pngArr.size()) {
+    (*target)[arrI++] = pngArr[pngI++];
+    (*target)[arrI++] = pngArr[pngI++];
+    (*target)[arrI++] = pngArr[pngI++];
+    pngI++;
+  }
+}
+
+std::string getTextureFileName(std::string& configPath, json& data,
+                               std::string target) {
+  std::string texFileName;
+  u_int32_t nameBegin = 0;
+  const char* str = configPath.c_str();
+  for (u_int32_t i = 0; i < configPath.length(); i++)
+    if (str[i] == '/')
+      nameBegin = i;
+  if (nameBegin > 0 && nameBegin < configPath.length() - 1)
+    nameBegin++;
+  texFileName = configPath.substr(0, nameBegin) + (std::string)data[target];
+
+  return texFileName;
+}
+
+void textureCreateBox(Texture* tex, json& data, std::string& configPath) {
+
+  std::string texFileName = getTextureFileName(configPath, data, "source");
+  loadTextureFromFile(texFileName, tex, &tex->pixels);
 
   {
     // load png
@@ -148,39 +175,16 @@ void textureCreateBox(Texture* tex, json& data, std::string& configPath) {
 
 void textureCreateObj(Texture* tex, json& data, std::string& configPath,
                       std::vector<float>& UVs, std::vector<float>& normals,
-                      u_int16_t vertLen) {
-  // find texture path
-  std::string texFileName;
-  {
-    u_int32_t nameBegin = 0;
-    const char* str = configPath.c_str();
-    for (u_int32_t i = 0; i < configPath.length(); i++)
-      if (str[i] == '/')
-        nameBegin = i;
-    if (nameBegin > 0 && nameBegin < configPath.length() - 1)
-      nameBegin++;
-    texFileName = configPath.substr(0, nameBegin) + (std::string)data["source"];
-  }
+                      u_int16_t vertLen, bool blending) {
 
   {
-    // load png
-    std::vector<u_int8_t> pngArr;
-    if (unsigned error =
-            lodepng::decode(pngArr, tex->width, tex->height, texFileName)) {
-      std::cout << "PNG decoder error " << error << ": "
-                << lodepng_error_text(error) << std::endl;
-      abort();
-    }
-    // based on 4bit png convert to 3bit array
-    tex->pixels =
-        (u_int8_t*)malloc(sizeof(u_int8_t) * 3 * tex->width * tex->height);
-    u_int32_t pngI = 0, arrI = 0;
-    while (pngI < pngArr.size()) {
-      tex->pixels[arrI++] = pngArr[pngI++];
-      tex->pixels[arrI++] = pngArr[pngI++];
-      tex->pixels[arrI++] = pngArr[pngI++];
-      pngI++;
-    }
+    std::string texFileName = getTextureFileName(configPath, data, "source");
+    loadTextureFromFile(texFileName, tex, &tex->pixels);
+  }
+  if (blending) {
+    std::string blendFileName =
+        getTextureFileName(configPath, data, "blending");
+    loadTextureFromFile(blendFileName, tex, &tex->blend);
   }
 
   tex->UVs = (float*)malloc(UVs.size() * sizeof(float));

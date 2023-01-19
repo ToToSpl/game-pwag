@@ -24,7 +24,7 @@ struct SceneObject {
   float scale = 1.0;
 };
 
-enum EntitySpecial { NONE, FLAP, BREATHE };
+enum EntitySpecial { NONE, FLAP, BREATHE, TEXBLENDING };
 
 struct BasicEntity {
   std::string name;
