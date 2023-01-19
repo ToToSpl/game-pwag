@@ -48,27 +48,6 @@ void textureCreateBox(Texture* tex, json& data, std::string& configPath) {
   std::string texFileName = getTextureFileName(configPath, data, "source");
   loadTextureFromFile(texFileName, tex, &tex->pixels);
 
-  {
-    // load png
-    std::vector<u_int8_t> pngArr;
-    if (unsigned error =
-            lodepng::decode(pngArr, tex->width, tex->height, texFileName)) {
-      std::cout << "PNG decoder error " << error << ": "
-                << lodepng_error_text(error) << std::endl;
-      abort();
-    }
-    // based on 4bit png convert to 3bit array
-    tex->pixels =
-        (u_int8_t*)malloc(sizeof(u_int8_t) * 3 * tex->width * tex->height);
-    u_int32_t pngI = 0, arrI = 0;
-    while (pngI < pngArr.size()) {
-      tex->pixels[arrI++] = pngArr[pngI++];
-      tex->pixels[arrI++] = pngArr[pngI++];
-      tex->pixels[arrI++] = pngArr[pngI++];
-      pngI++;
-    }
-  }
-
   // copy json data
   float top[4], bottom[4], left[4], right[4], front[4], back[4];
   {
@@ -178,12 +157,11 @@ void textureCreateObj(Texture* tex, json& data, std::string& configPath,
                       u_int16_t vertLen, bool blending) {
 
   {
-    std::string texFileName = getTextureFileName(configPath, data, "source");
+    auto texFileName = getTextureFileName(configPath, data, "source");
     loadTextureFromFile(texFileName, tex, &tex->pixels);
   }
   if (blending) {
-    std::string blendFileName =
-        getTextureFileName(configPath, data, "blending");
+    auto blendFileName = getTextureFileName(configPath, data, "blending");
     loadTextureFromFile(blendFileName, tex, &tex->blend);
   }
 
@@ -207,6 +185,13 @@ void textureCreateObj(Texture* tex, json& data, std::string& configPath,
   glBindTexture(GL_TEXTURE_2D, tex->textureID);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei)tex->width,
                (GLsizei)tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->pixels);
+
+  if (blending) {
+    glGenTextures(1, &tex->blendingID);
+    glBindTexture(GL_TEXTURE_2D, tex->blendingID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei)tex->width,
+                 (GLsizei)tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->blend);
+  }
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

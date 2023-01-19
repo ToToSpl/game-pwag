@@ -11,7 +11,7 @@ struct Texture {
   u_int32_t UVsize;
   u_int8_t *pixels, *blend;
   u_int32_t width, height;
-  GLuint textureID, uvID, normalID;
+  GLuint textureID, blendingID, uvID, normalID;
 };
 
 void textureCreateBox(Texture* tex, json& data, std::string& configPath);
