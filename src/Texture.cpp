@@ -186,15 +186,18 @@ void textureCreateObj(Texture* tex, json& data, std::string& configPath,
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei)tex->width,
                (GLsizei)tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->pixels);
 
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
   if (blending) {
     glGenTextures(1, &tex->blendingID);
     glBindTexture(GL_TEXTURE_2D, tex->blendingID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei)tex->width,
                  (GLsizei)tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->blend);
-  }
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  }
 }
 
 void textureBindAttrib(Texture* tex, u_int32_t attrib) {
