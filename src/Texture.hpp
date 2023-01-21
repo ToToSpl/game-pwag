@@ -19,6 +19,7 @@ void textureCreateObj(Texture* tex, json& data, std::string& configPath,
                       std::vector<float>& UVs, std::vector<float>& normals,
                       u_int16_t vertLen, bool blending = false);
 void textureBindAttrib(Texture* tex, u_int32_t attrib);
+void textureBindBlend(Texture* tex, u_int32_t attrib);
 void textureBindNormals(Texture* tex, u_int32_t attrib);
 
 } // namespace Game

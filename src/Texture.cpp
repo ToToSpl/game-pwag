@@ -201,6 +201,7 @@ void textureCreateObj(Texture* tex, json& data, std::string& configPath,
 }
 
 void textureBindAttrib(Texture* tex, u_int32_t attrib) {
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, tex->textureID);
   glEnableVertexAttribArray(attrib);
   glBindBuffer(GL_ARRAY_BUFFER, tex->uvID);
@@ -211,6 +212,11 @@ void textureBindAttrib(Texture* tex, u_int32_t attrib) {
                         0,        // stride
                         (void*)0  // array buffer offset
   );
+}
+
+void textureBindBlend(Texture* tex) {
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, tex->blendingID);
 }
 
 void textureBindNormals(Texture* tex, u_int32_t attrib) {
