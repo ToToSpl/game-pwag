@@ -85,6 +85,8 @@ bool Renderer::init(std::string window_name) {
       glGetUniformLocation(_stdShaderProg->programId, "NormalMat");
   _uniforms.cameraPosID = glGetUniformLocation(_stdShaderProg->programId, "V");
   _uniforms.aliveID = glGetUniformLocation(_stdShaderProg->programId, "alive");
+  _uniforms.katanaBloodID =
+      glGetUniformLocation(_stdShaderProg->programId, "katanaBlood");
 
   _uniforms.lightDirID =
       glGetUniformLocation(_stdShaderProg->programId, "lightDir");
@@ -92,6 +94,13 @@ bool Renderer::init(std::string window_name) {
       glGetUniformLocation(_stdShaderProg->programId, "lightPoint");
   _uniforms.lightPointMultID =
       glGetUniformLocation(_stdShaderProg->programId, "lightPointMult");
+
+  _uniforms.textureID =
+      glGetUniformLocation(_stdShaderProg->programId, "mainTexture");
+  glUniform1i(_uniforms.textureID, 0);
+  _uniforms.blendingID =
+      glGetUniformLocation(_stdShaderProg->programId, "blendTexture");
+  glUniform1i(_uniforms.blendingID, 1);
 
   _uniforms.healthID =
       glGetUniformLocation(_postEffectProg->programId, "health");
@@ -175,6 +184,14 @@ float Renderer::renderFrame(float ts) {
           glGetUniformLocation(_stdShaderProg->programId, "V");
       _uniforms.aliveID =
           glGetUniformLocation(_stdShaderProg->programId, "alive");
+      _uniforms.katanaBloodID =
+          glGetUniformLocation(_stdShaderProg->programId, "katanaBlood");
+      _uniforms.textureID =
+          glGetUniformLocation(_stdShaderProg->programId, "mainTexture");
+      glUniform1i(_uniforms.textureID, 0);
+      _uniforms.blendingID =
+          glGetUniformLocation(_stdShaderProg->programId, "blendTexture");
+      glUniform1i(_uniforms.blendingID, 1);
     }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

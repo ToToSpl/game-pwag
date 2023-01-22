@@ -4,12 +4,14 @@ in vec3 norm;
 in vec3 FragPos;
 out vec4 color;
 
-uniform sampler2D myTextureSampler;
+uniform sampler2D mainTexture;
+uniform sampler2D blendTexture;
 uniform vec3 V;
 uniform int alive;
 uniform vec3 lightDir;
 uniform vec3 lightPoint;
 uniform float lightPointMult;
+uniform float katanaBlood;
 
 float specularStrength = 0.9;
 float ambientStrenght = 0.6;
@@ -43,7 +45,10 @@ vec3 calcPointLight() {
 }
 
 void main(){
-  vec3 objectColor = texture( myTextureSampler, UV ).rgb;
+  vec3 objectColor = texture( mainTexture, UV ).rgb;
+  if(katanaBlood != 0.f) {
+    objectColor += katanaBlood * texture(blendTexture, UV).rgb;
+  }
 
   if(alive == 1) {
     vec3 directionalLight = calcDirLight();

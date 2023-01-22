@@ -310,6 +310,7 @@ void Scene::removeEntity(u_int32_t entId, SceneObject* obj) {
   vec.erase(std::remove(vec.begin(), vec.end(), obj), vec.end());
   delete obj;
 }
+
 void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent,
                                 glm::mat4& camMat, glm::vec3& camPos,
                                 UniformsIDs* uniforms) {
@@ -327,12 +328,20 @@ void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent,
                         (void*)0  // array buffer offset
   );
 
+  glUniform1i(uniforms->textureID, 0);
   textureBindAttrib(&ent.texture, 1);
   textureBindNormals(&ent.texture, 2);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ent.indArr);
 
   glUniform3fv(uniforms->cameraID, 1, &camPos[0]);
+
+  if (ent.special == EntitySpecial::TEXBLENDING) {
+    glUniform1i(uniforms->blendingID, 1);
+    glUniform1f(uniforms->katanaBloodID, 1.0f);
+    textureBindBlend(&ent.texture);
+  } else
+    glUniform1f(uniforms->katanaBloodID, 0.f);
 
   if (ent.special == EntitySpecial::NONE ||
       ent.special == EntitySpecial::TEXBLENDING) {
@@ -351,6 +360,7 @@ void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent,
       glUniformMatrix3fv(uniforms->normalMatID, 1, GL_FALSE,
                          &obj->normalMat[0][0]);
       glUniform1i(uniforms->aliveID, obj->alive);
+
       // draw
       glDrawElements(GL_TRIANGLES,      // mode
                      ent.indeciesSize,  // count

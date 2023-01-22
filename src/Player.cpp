@@ -123,11 +123,11 @@ void Player::update(float ts) {
     float barrier = SCENE_SIZE - SCENE_OFFSET - 1.f;
     if (_position.x > barrier)
       _position.x = barrier;
-    if (_position.x < -barrier)
+    else if (_position.x < -barrier)
       _position.x = -barrier;
     if (_position.z > barrier)
       _position.z = barrier;
-    if (_position.z < -barrier)
+    else if (_position.z < -barrier)
       _position.z = -barrier;
   }
 
@@ -136,6 +136,14 @@ void Player::update(float ts) {
     _position.y = 0.f;
 
   _attacking = _animationRate > 0.f;
+
+  // katana blood blending effect
+  if (_katanaBlood != 0.f) {
+    if (_katanaBlood < 0.f)
+      _katanaBlood = 0.f;
+    else
+      _katanaBlood -= ts / 1000.f;
+  }
 
   placeKatana(ts);
   _gameTime += ts;
@@ -188,6 +196,8 @@ bool Player::checkHit(glm::vec3 pos) {
   float cov = fabs(glm::dot(dir, _cutVec));
   if (cov < PLAYER_ATTACK_ACC)
     return false;
+
+  _katanaBlood = KATANA_BLOOD_TIME;
 
   return true;
 }

@@ -15,6 +15,7 @@ private:
   GLFWwindow* _window;
   float _gameTime = 0.f;
   float _animationRate = 0.f;
+  float _katanaBlood = 0.f;
   float _health = 100.f, _healthCooldown = 0.f;
   glm::mat4 _rotMat1, _rotMat2;
   double _horAng, _vertAng;
@@ -44,6 +45,7 @@ public:
   inline bool getWireframe() { return _wireframe; };
   inline bool getMousePressed() { return _mousePressed; };
   inline float getHealth() { return _health; };
+  inline float getKatanaBlood() { return _katanaBlood / KATANA_BLOOD_TIME; };
   void hit();
 };
 } // namespace Game
