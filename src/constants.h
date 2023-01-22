@@ -33,7 +33,7 @@
 
 #define KATANA_POS_REL                                                         \
   { -0.2, -0.25, 0.75 }
-#define KATANA_BLOOD_TIME 2.f
+#define KATANA_BLOOD_TIME 4.f
 
 #define FPS_AVERAGE 10 // running average for fps calculation
 #define SLOW_MO_MULT 0.3f

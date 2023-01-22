@@ -313,7 +313,7 @@ void Scene::removeEntity(u_int32_t entId, SceneObject* obj) {
 
 void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent,
                                 glm::mat4& camMat, glm::vec3& camPos,
-                                UniformsIDs* uniforms) {
+                                float blendVal, UniformsIDs* uniforms) {
 
   if (ent.objects.size() == 0)
     return;
@@ -338,7 +338,7 @@ void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent,
 
   if (ent.special == EntitySpecial::TEXBLENDING) {
     glUniform1i(uniforms->blendingID, 1);
-    glUniform1f(uniforms->katanaBloodID, 1.0f);
+    glUniform1f(uniforms->katanaBloodID, blendVal);
     textureBindBlend(&ent.texture);
   } else
     glUniform1f(uniforms->katanaBloodID, 0.f);

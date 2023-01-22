@@ -200,7 +200,8 @@ float Renderer::renderFrame(float ts) {
 
     std::vector<BasicEntity>* ents = _scene.getEntities();
     for (u_int32_t i = 0; i < ents->size(); i++) {
-      _scene.renderEntityObjects(ts, (*ents)[i], camera, cameraPos, &_uniforms);
+      _scene.renderEntityObjects(ts, (*ents)[i], camera, cameraPos,
+                                 _player->getKatanaBlood(), &_uniforms);
     }
   } else {
 
@@ -215,7 +216,8 @@ float Renderer::renderFrame(float ts) {
 
     std::vector<BasicEntity>* ents = _scene.getEntities();
     for (u_int32_t i = 0; i < ents->size(); i++) {
-      _scene.renderEntityObjects(ts, (*ents)[i], camera, cameraPos, &_uniforms);
+      _scene.renderEntityObjects(ts, (*ents)[i], camera, cameraPos,
+                                 _player->getKatanaBlood(), &_uniforms);
     }
   }
 

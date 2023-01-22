@@ -57,7 +57,8 @@ public:
   SceneObject* spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot);
   void removeEntity(u_int32_t entId, SceneObject* obj);
   void renderEntityObjects(float ts_ms, BasicEntity& ent, glm::mat4& camMat,
-                           glm::vec3& camPos, UniformsIDs* uniforms);
+                           glm::vec3& camPos, float blendVal,
+                           UniformsIDs* uniforms);
   inline std::vector<BasicEntity>* getEntities() { return &_basic_entities; };
 };
 } // namespace Game
