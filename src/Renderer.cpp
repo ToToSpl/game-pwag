@@ -78,19 +78,25 @@ bool Renderer::init(std::string window_name) {
       compileProgram(POSTEFFECT_SHADER_VERT, POSTEFFECT_SHADER_FRAG);
 
   _currentProgID = _stdShaderProg->programId;
-  _cameraID = glGetUniformLocation(_stdShaderProg->programId, "MVP");
-  _transformationID = glGetUniformLocation(_stdShaderProg->programId, "M");
-  _normalMatID = glGetUniformLocation(_stdShaderProg->programId, "NormalMat");
-  _cameraPosID = glGetUniformLocation(_stdShaderProg->programId, "V");
-  _aliveID = glGetUniformLocation(_stdShaderProg->programId, "alive");
+  _uniforms.cameraID = glGetUniformLocation(_stdShaderProg->programId, "MVP");
+  _uniforms.transformationID =
+      glGetUniformLocation(_stdShaderProg->programId, "M");
+  _uniforms.normalMatID =
+      glGetUniformLocation(_stdShaderProg->programId, "NormalMat");
+  _uniforms.cameraPosID = glGetUniformLocation(_stdShaderProg->programId, "V");
+  _uniforms.aliveID = glGetUniformLocation(_stdShaderProg->programId, "alive");
 
-  _lightDirID = glGetUniformLocation(_stdShaderProg->programId, "lightDir");
-  _lightPointID = glGetUniformLocation(_stdShaderProg->programId, "lightPoint");
-  _lightPointMultID =
+  _uniforms.lightDirID =
+      glGetUniformLocation(_stdShaderProg->programId, "lightDir");
+  _uniforms.lightPointID =
+      glGetUniformLocation(_stdShaderProg->programId, "lightPoint");
+  _uniforms.lightPointMultID =
       glGetUniformLocation(_stdShaderProg->programId, "lightPointMult");
 
-  _healthID = glGetUniformLocation(_postEffectProg->programId, "health");
-  _tsID = glGetUniformLocation(_postEffectProg->programId, "t_elapsed");
+  _uniforms.healthID =
+      glGetUniformLocation(_postEffectProg->programId, "health");
+  _uniforms.tsID =
+      glGetUniformLocation(_postEffectProg->programId, "t_elapsed");
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
@@ -128,8 +134,8 @@ void Renderer::addPointLight(glm::vec3 point, std::string pattern) {
 }
 
 void Renderer::setupLight() {
-  glUniform3fv(_lightDirID, 1, &_lightDir[0]);
-  glUniform3fv(_lightPointID, 1, &_lightPoint[0]);
+  glUniform3fv(_uniforms.lightDirID, 1, &_lightDir[0]);
+  glUniform3fv(_uniforms.lightPointID, 1, &_lightPoint[0]);
   // calculate pattern brightness
   if (_timeElapsed - _lightLastBlink >= 1000.0f * (1.0f / LIGHT_BLINK_FPS)) {
     _lightLastBlink = _timeElapsed;
@@ -140,7 +146,7 @@ void Renderer::setupLight() {
     _lightPointMult =
         0.8f * 0.076923f * (float)(_lightPattern[_lightPatternCurrent] - 'a');
   }
-  glUniform1f(_lightPointMultID, _lightPointMult);
+  glUniform1f(_uniforms.lightPointMultID, _lightPointMult);
 }
 
 float Renderer::renderFrame(float ts) {
@@ -159,12 +165,16 @@ float Renderer::renderFrame(float ts) {
     glUseProgram(_stdShaderProg->programId);
     if (_currentProgID != _stdShaderProg->programId) {
       _currentProgID = _stdShaderProg->programId;
-      _cameraID = glGetUniformLocation(_stdShaderProg->programId, "MVP");
-      _transformationID = glGetUniformLocation(_stdShaderProg->programId, "M");
-      _normalMatID =
+      _uniforms.cameraID =
+          glGetUniformLocation(_stdShaderProg->programId, "MVP");
+      _uniforms.transformationID =
+          glGetUniformLocation(_stdShaderProg->programId, "M");
+      _uniforms.normalMatID =
           glGetUniformLocation(_stdShaderProg->programId, "NormalMat");
-      _cameraPosID = glGetUniformLocation(_stdShaderProg->programId, "V");
-      _aliveID = glGetUniformLocation(_stdShaderProg->programId, "alive");
+      _uniforms.cameraPosID =
+          glGetUniformLocation(_stdShaderProg->programId, "V");
+      _uniforms.aliveID =
+          glGetUniformLocation(_stdShaderProg->programId, "alive");
     }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -173,9 +183,7 @@ float Renderer::renderFrame(float ts) {
 
     std::vector<BasicEntity>* ents = _scene.getEntities();
     for (u_int32_t i = 0; i < ents->size(); i++) {
-      _scene.renderEntityObjects(ts, (*ents)[i], _cameraID, camera, cameraPos,
-                                 _transformationID, _normalMatID, _cameraPosID,
-                                 _aliveID);
+      _scene.renderEntityObjects(ts, (*ents)[i], camera, cameraPos, &_uniforms);
     }
   } else {
 
@@ -183,15 +191,14 @@ float Renderer::renderFrame(float ts) {
     glUseProgram(_wireframeProg->programId);
     if (_currentProgID != _wireframeProg->programId) {
       _currentProgID = _wireframeProg->programId;
-      _cameraID = glGetUniformLocation(_wireframeProg->programId, "MVP");
+      _uniforms.cameraID =
+          glGetUniformLocation(_wireframeProg->programId, "MVP");
     }
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     std::vector<BasicEntity>* ents = _scene.getEntities();
     for (u_int32_t i = 0; i < ents->size(); i++) {
-      _scene.renderEntityObjects(ts, (*ents)[i], _cameraID, camera, cameraPos,
-                                 _transformationID, _normalMatID, _cameraPosID,
-                                 _aliveID);
+      _scene.renderEntityObjects(ts, (*ents)[i], camera, cameraPos, &_uniforms);
     }
   }
 
@@ -202,8 +209,8 @@ float Renderer::renderFrame(float ts) {
     glBindBuffer(GL_ARRAY_BUFFER, _postEffectVertArr);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _postEffectIndArr);
-    glUniform1f(_healthID, _player->getHealth());
-    glUniform1f(_tsID, _timeElapsed);
+    glUniform1f(_uniforms.healthID, _player->getHealth());
+    glUniform1f(_uniforms.tsID, _timeElapsed);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, (void*)0);
     glDisableVertexAttribArray(0);
   }

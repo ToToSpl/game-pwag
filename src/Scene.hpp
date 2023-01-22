@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "../lib/json.hpp"
+#include "EngineUniforms.hpp"
 #include "Texture.hpp"
 
 namespace Game {
@@ -55,10 +56,8 @@ public:
   u_int32_t addObjEntity(json& data, std::string configPath);
   SceneObject* spawnEntity(u_int32_t entId, glm::vec3 pos, glm::quat rot);
   void removeEntity(u_int32_t entId, SceneObject* obj);
-  void renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint caMatID,
-                           glm::mat4& camMat, glm::vec3& camPos,
-                           GLuint transMatID, GLuint normalMatID,
-                           GLuint cameraPosID, GLuint aliveID);
+  void renderEntityObjects(float ts_ms, BasicEntity& ent, glm::mat4& camMat,
+                           glm::vec3& camPos, UniformsIDs* uniforms);
   inline std::vector<BasicEntity>* getEntities() { return &_basic_entities; };
 };
 } // namespace Game

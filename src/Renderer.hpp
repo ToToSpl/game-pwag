@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "EngineUniforms.hpp"
 #include "Player.hpp"
 #include "Scene.hpp"
 
@@ -31,10 +32,8 @@ private:
   GLuint _currentProgID;
   bool _running = false;
   double _timeElapsed = 0.f;
-  GLuint _cameraID, _transformationID, _normalMatID, _cameraPosID, _aliveID;
-  GLuint _healthID, _tsID;
+  UniformsIDs _uniforms;
   GLuint _postEffectVertArr, _postEffectIndArr;
-  GLuint _lightDirID, _lightPointID, _lightPointMultID;
   glm::vec3 _lightDir, _lightPoint;
   float _lightPointMult;
   double _lightLastBlink = 0.f;

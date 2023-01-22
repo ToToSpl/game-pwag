@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+#include "Renderer.hpp"
 #include "Texture.hpp"
 #include "constants.h"
 #include "glm/gtx/transform.hpp"
@@ -309,11 +310,9 @@ void Scene::removeEntity(u_int32_t entId, SceneObject* obj) {
   vec.erase(std::remove(vec.begin(), vec.end(), obj), vec.end());
   delete obj;
 }
-
-void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint camMatID,
+void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent,
                                 glm::mat4& camMat, glm::vec3& camPos,
-                                GLuint transMatID, GLuint normalMatID,
-                                GLuint cameraPosID, GLuint aliveID) {
+                                UniformsIDs* uniforms) {
 
   if (ent.objects.size() == 0)
     return;
@@ -333,7 +332,7 @@ void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint camMatID,
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ent.indArr);
 
-  glUniform3fv(cameraPosID, 1, &camPos[0]);
+  glUniform3fv(uniforms->cameraID, 1, &camPos[0]);
 
   if (ent.special == EntitySpecial::NONE ||
       ent.special == EntitySpecial::TEXBLENDING) {
@@ -346,10 +345,12 @@ void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint camMatID,
         obj->moved = false;
       }
 
-      glUniformMatrix4fv(camMatID, 1, GL_FALSE, &mvp[0][0]);
-      glUniformMatrix4fv(transMatID, 1, GL_FALSE, &obj->transform[0][0]);
-      glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &obj->normalMat[0][0]);
-      glUniform1i(aliveID, obj->alive);
+      glUniformMatrix4fv(uniforms->cameraID, 1, GL_FALSE, &mvp[0][0]);
+      glUniformMatrix4fv(uniforms->transformationID, 1, GL_FALSE,
+                         &obj->transform[0][0]);
+      glUniformMatrix3fv(uniforms->normalMatID, 1, GL_FALSE,
+                         &obj->normalMat[0][0]);
+      glUniform1i(uniforms->aliveID, obj->alive);
       // draw
       glDrawElements(GL_TRIANGLES,      // mode
                      ent.indeciesSize,  // count
@@ -378,10 +379,11 @@ void Scene::renderEntityObjects(float ts_ms, BasicEntity& ent, GLuint camMatID,
 
       glm::mat4 mvp = camMat * flappy;
       glm::mat3 normalMat = glm::transpose(glm::inverse(flappy));
-      glUniformMatrix4fv(camMatID, 1, GL_FALSE, &mvp[0][0]);
-      glUniformMatrix4fv(transMatID, 1, GL_FALSE, &obj->transform[0][0]);
-      glUniformMatrix3fv(normalMatID, 1, GL_FALSE, &normalMat[0][0]);
-      glUniform1i(aliveID, obj->alive);
+      glUniformMatrix4fv(uniforms->cameraID, 1, GL_FALSE, &mvp[0][0]);
+      glUniformMatrix4fv(uniforms->transformationID, 1, GL_FALSE,
+                         &obj->transform[0][0]);
+      glUniformMatrix3fv(uniforms->normalMatID, 1, GL_FALSE, &normalMat[0][0]);
+      glUniform1i(uniforms->aliveID, obj->alive);
       // draw
       glDrawElements(GL_TRIANGLES,      // mode
                      ent.indeciesSize,  // count
