@@ -162,7 +162,6 @@ float Renderer::renderFrame(float ts) {
   _timeElapsed += ts;
   auto start = std::chrono::high_resolution_clock::now();
 
-  _player->update(ts);
   glm::mat4 camera = _player->getPlayerProjection();
   glm::vec3 cameraPos = _player->getPlayerCameraPosition();
 

@@ -73,6 +73,8 @@ int main(int argc, char** argv) {
       }
     }
 
+    player.update(lastFrame);
+
     renderer.renderFrame(lastFrame);
 
     if (player.getHealth() < 0.f) {
